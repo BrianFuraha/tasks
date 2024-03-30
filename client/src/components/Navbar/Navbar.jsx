@@ -4,12 +4,11 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink, useLocation, Link } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
 
-import { Home } from "../../pages";
 import { images } from "../../assets";
 
 export default function Example() {
   const navigation = [
-    { name: "Home", to: "/", current: false },
+    { name: "Home", to: "/Hero", current: false },
     { name: "How it works", to: "/How", current: false },
     { name: "Why Wéra", to: "/Why", current: false },
   ];

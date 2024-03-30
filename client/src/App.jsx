@@ -4,7 +4,6 @@ import {
   createRoutesFromElements,
   RouterProvider,
   Route,
-  Routes,
 } from "react-router-dom";
 
 import { RootLayout, RootLayout2 } from "./layouts";
@@ -16,7 +15,6 @@ const routes = (
       <Route index element={<Home />} />
       <Route path="/how" element={<How />} />
       <Route path="/why" element={<Why />} />
-      <Route path="/" element={<RootLayout2 />} />
     </Route>
     <Route element={<RootLayout2 />}>
       <Route path="/signin" element={<SignIn />} />
