@@ -40,25 +40,31 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-    if (data.success === false) {
-      setError(data.message);
-      setLoading(false);
-      return;
-    }
-    setLoading(false);
-    setError(null);
-    navigate("/signin");
     try {
+      setLoading(true);
+
+      if (formData.password !== formData.cpassword) {
+        setError("Password does not match!!!");
+        setLoading(false);
+        return;
+      }
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setError(data.message);
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+      setError(null);
+      navigate("/signin");
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -171,7 +177,7 @@ export default function SignUp() {
             </Link>
           </p>
         </div>
-        {error && <p className=" text-red-500 mt-5">{error}</p>}
+        {error && <p className=" text-red-500 mt-5 text-center font-semibold">{error}</p>}
       </div>
     </div>
   );
