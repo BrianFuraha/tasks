@@ -1,10 +1,21 @@
-import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 import { images } from "../../assets";
 
+const initialState = {
+  email: "",
+  password: "",
+  cpassword: "",
+};
+
 export default function SignUp() {
+  const [formData, setFormData] = useState(initialState);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const videoRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const video = videoRef.current;
@@ -22,6 +33,41 @@ export default function SignUp() {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
   }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+    if (data.success === false) {
+      setError(data.message);
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+    setError(null);
+    navigate("/signin");
+    try {
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
+    }
+
+    console.log(data);
+  };
+
+  console.log(formData);
   return (
     <div className="relative w-full h-full">
       <video
@@ -44,7 +90,7 @@ export default function SignUp() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -60,6 +106,7 @@ export default function SignUp() {
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -80,6 +127,7 @@ export default function SignUp() {
                   type="password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -97,16 +145,18 @@ export default function SignUp() {
                   type="password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={handleChange}
                 />
               </div>
             </div>
 
             <div>
               <button
+                disabled={loading}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign up
+                {loading ? "Loading..." : "Sign Up"}
               </button>
             </div>
           </form>
@@ -121,6 +171,7 @@ export default function SignUp() {
             </Link>
           </p>
         </div>
+        {error && <p className=" text-red-500 mt-5">{error}</p>}
       </div>
     </div>
   );
