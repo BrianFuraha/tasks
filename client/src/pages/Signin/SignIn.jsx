@@ -1,17 +1,32 @@
-import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../../redux/user/userSlice";
 import { images } from "../../assets";
 
+const initialState = {
+  email: "",
+  password: "",
+};
+
 export default function SignIn() {
+  const [formData, setFormData] = useState(initialState);
+  const { loading, error } = useSelector((state) => state.user);
+
   const videoRef = useRef(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const video = videoRef.current;
 
     const handleTimeUpdate = () => {
       if (video.currentTime >= 17) {
-        // Set the start time (in seconds)
         video.currentTime = 2;
       }
     };
@@ -22,6 +37,35 @@ export default function SignIn() {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
   }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(signInStart());
+
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        return;
+      }
+      dispatch(signInSuccess(data));
+      navigate("/hero");
+    } catch (error) {
+      dispatch(signInFailure(error.message));
+    }
+  };
 
   return (
     <div className="relative w-full h-full">
@@ -44,7 +88,7 @@ export default function SignIn() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -60,6 +104,7 @@ export default function SignIn() {
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -86,19 +131,20 @@ export default function SignIn() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={handleChange}
                 />
               </div>
             </div>
 
             <div>
               <button
+                disabled={loading}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                {loading ? "Loading..." : "Sign in"}
               </button>
             </div>
           </form>
@@ -113,6 +159,11 @@ export default function SignIn() {
             </Link>
           </p>
         </div>
+        {error && (
+          <p className=" text-red-500 mt-5 text-center font-semibold">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

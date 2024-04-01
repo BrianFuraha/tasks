@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
-
-import { Testimonials, Review, Stats, Description } from "../../container";
+import { Review } from "../../container";
 
 export default function Home() {
   return (

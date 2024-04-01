@@ -6,8 +6,8 @@ import {
   Route,
 } from "react-router-dom";
 
-import { RootLayout, RootLayout2 } from "./layouts";
-import { Home, How, Why, SignIn, SignUp, Runner } from "./pages";
+import { RootLayout, RootLayout1, RootLayout2 } from "./layouts";
+import { Home, How, Why, SignIn, SignUp, Runner, Land } from "./pages";
 
 const routes = (
   <>
@@ -15,6 +15,9 @@ const routes = (
       <Route index element={<Home />} />
       <Route path="/how" element={<How />} />
       <Route path="/why" element={<Why />} />
+    </Route>
+    <Route element={<RootLayout1 />}>
+      <Route path="/hero" element={<Land />} />
     </Route>
     <Route element={<RootLayout2 />}>
       <Route path="/signin" element={<SignIn />} />
