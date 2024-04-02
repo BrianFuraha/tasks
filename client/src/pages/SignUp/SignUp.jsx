@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
 import { images } from "../../assets";
+import { OAuth } from "../../components";
 
 const initialState = {
   email: "",
@@ -100,7 +101,7 @@ export default function SignUp() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-sm uppercase font-medium leading-6 text-gray-900"
               >
                 Email address
               </label>
@@ -121,7 +122,7 @@ export default function SignUp() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium uppercase leading-6 text-gray-900"
                 >
                   Password
                 </label>
@@ -136,10 +137,10 @@ export default function SignUp() {
                   onChange={handleChange}
                 />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-2">
                 <label
                   htmlFor="cpassword"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm uppercase font-medium leading-6 text-gray-900"
                 >
                   Confirm Password
                 </label>
@@ -160,10 +161,12 @@ export default function SignUp() {
               <button
                 disabled={loading}
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-indigo-600 uppercase px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 {loading ? "Loading..." : "Sign Up"}
               </button>
+
+              <OAuth />
             </div>
           </form>
 
@@ -177,7 +180,11 @@ export default function SignUp() {
             </Link>
           </p>
         </div>
-        {error && <p className=" text-red-500 mt-5 text-center font-semibold">{error}</p>}
+        {error && (
+          <p className=" text-red-500 mt-5 text-center font-semibold">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

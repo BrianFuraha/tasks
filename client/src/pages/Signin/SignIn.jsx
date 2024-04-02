@@ -8,6 +8,7 @@ import {
   signInSuccess,
 } from "../../redux/user/userSlice";
 import { images } from "../../assets";
+import { OAuth } from "../../components";
 
 const initialState = {
   email: "",
@@ -92,7 +93,7 @@ export default function SignIn() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-sm uppercase font-medium leading-6 text-gray-900"
               >
                 Email address
               </label>
@@ -113,7 +114,7 @@ export default function SignIn() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm uppercase font-medium leading-6 text-gray-900"
                 >
                   Password
                 </label>
@@ -142,10 +143,13 @@ export default function SignIn() {
               <button
                 disabled={loading}
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-indigo-600 uppercase px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 {loading ? "Loading..." : "Sign in"}
               </button>
+              <div>
+                <OAuth />
+              </div>
             </div>
           </form>
 
