@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import { RootLayout, RootLayout1, RootLayout2 } from "./layouts";
-import { Home, How, Why, SignIn, SignUp, Runner, Land } from "./pages";
+import { Home, How, Why, SignIn, SignUp, Land, Profile, Runner, Messages, Runsign } from "./pages";
 
 const routes = (
   <>
@@ -18,11 +18,14 @@ const routes = (
     </Route>
     <Route element={<RootLayout1 />}>
       <Route path="/hero" element={<Land />} />
+      <Route path="/messages" element={<Messages />} />
+      <Route path="/runners" element={<Runner />} />
+      <Route path="/profile" element={<Profile />} />
     </Route>
     <Route element={<RootLayout2 />}>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/runner" element={<Runner />} />
+      <Route path="/runner-signup" element={<Runsign />} />
     </Route>
   </>
 );

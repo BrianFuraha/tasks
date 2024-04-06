@@ -5,3 +5,6 @@ export { default as Home } from "./Home/Home";
 export { default as Land } from "./Home/Land";
 export { default as Why } from "./Why/Why";
 export { default as Runner } from "./Runner/Runner";
+export { default as Runsign } from "./Runner/Runsign";
+export { default as Profile } from './createProfile/create.profile'
+export { default as Messages } from './messages/chats'
