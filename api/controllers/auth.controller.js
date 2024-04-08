@@ -26,7 +26,7 @@ export const signin = async (req, res, next) => {
 
   try {
     const validUser = await User.findOne({ email });
-    if (!validUser) return err(errorHandler(404, "User not found!!!"));
+    if (!validUser) return next(errorHandler(404, "User not found!!!"));
 
     const validPassword = await bcryptjs.compare(password, validUser.password);
     if (!validPassword) return next(errorHandler(401, "Wrong credentials!!!"));

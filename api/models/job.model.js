@@ -26,6 +26,10 @@ const jobSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    createdAt: {
+      type: Date,
+      default: new Date(),
+    },
   },
   { timestamps: true }
 );

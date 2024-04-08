@@ -13,10 +13,15 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s"
+      default:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s",
     },
     location: {
       type: String,
+    },
+    userType: {
+      type: String,
+      default: "user",
     },
     password: {
       type: String,

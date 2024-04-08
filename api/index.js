@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
+import chatRouter from "./routes/chat.route.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.listen(5000, () => {
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/chat", chatRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
