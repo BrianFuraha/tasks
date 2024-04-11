@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BellIcon } from "@heroicons/react/24/outline";
@@ -11,13 +11,35 @@ export default function Navbar() {
   const { currentUser } = useSelector((state) => state.user);
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
+  const [searchPlaceholder, setSearchPlaceholder] =
+    useState("Search for runners");
+
+  useEffect(() => {
+    // Check if currentUser is null or undefined, redirect to home if no user
+    if (currentUser === null) {
+      navigate("/");
+    }
+  }, [currentUser, navigate]);
+  useEffect(() => {
+    const activePage =
+      navlinks.find((link) => link.link === location.pathname) ||
+      navlink.find((link) => link.link === location.pathname);
+
+    if (activePage && activePage.name === "dashboard") {
+      setSearchPlaceholder("Search for runners");
+    } else if (activePage && activePage.name === "profile") {
+      setSearchPlaceholder("Search for runners");
+    } else {
+      setSearchPlaceholder(`Search for ${activePage.name}`);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-gray-100 rounded-[100px] shadow-2xl">
         <input
           type="text"
-          placeholder="Search for runners"
+          placeholder={searchPlaceholder}
           className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none border-none "
         />
 
@@ -30,21 +52,13 @@ export default function Navbar() {
         </div>
       </div>
       <div className="sm:flex hidden flex-row justify-end gap-4">
-        {/* <button
-          type="button"
-          className="relative rounded-full bg-gray-100 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-        >
-          <span className="absolute -inset-1.5" />
-          <span className="sr-only">View notifications</span>
-          <BellIcon className="h-6 w-6" aria-hidden="true" />
-        </button> */}
-        <p className="mt-3.5">{currentUser.username}</p>
+        <p className="mt-2.5">{currentUser.username}</p>
         <Link to="/profile">
           <div>
             <img
               src={currentUser.avatar}
               alt="user"
-              className="w-[52px] h-[52px] rounded-full bg-gray-100 flex justify-center items-center cursor-pointer shadow-2xl object-contain "
+              className="w-10 h-10 rounded-full bg-gray-100 flex justify-center items-center cursor-pointer shadow-2xl object-cover "
             />
           </div>
         </Link>

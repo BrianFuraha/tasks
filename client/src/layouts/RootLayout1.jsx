@@ -1,20 +1,7 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
 import { Outlet } from "react-router-dom";
 import { Navbar, Sidebar } from "../components";
 
-export default function RootLayout1() {
-  const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
-  
-  useEffect(() => {
-    // Check if currentUser is null or undefined, redirect to home if no user
-    if (!currentUser) {
-      navigate("/");
-    }
-  }, [currentUser, navigate]);
+export default function RootLayout1() {  
   return (
     <div className="bg-white">
       <div className="relative isolate px-6 pt-14 lg:px-8 ">

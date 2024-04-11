@@ -5,13 +5,9 @@ export default function Land() {
 
   return (
     <div>
-      <CustomButton
-        btnType="button"
-        title="create a wera"
-        styles="bg-[#8c6dfd]"
-        handleClick={() => {navigate("/createJob");}}
-      />
-      Dashboard
+      <h1>Dashboard</h1>
+      
+      <h2>my wera</h2>
     </div>
   );
 }

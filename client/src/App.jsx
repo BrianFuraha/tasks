@@ -4,6 +4,7 @@ import {
   createRoutesFromElements,
   RouterProvider,
   Route,
+  useNavigate,
 } from "react-router-dom";
 
 import { RootLayout, RootLayout1, RootLayout2 } from "./layouts";
@@ -20,7 +21,7 @@ const routes = (
       <Route path="/hero" element={<Land />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/runners" element={<Runner />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/" element={<Profile />} />
     </Route>
     <Route element={<RootLayout2 />}>
       <Route path="/signin" element={<SignIn />} />

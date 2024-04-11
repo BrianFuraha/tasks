@@ -6,10 +6,6 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    owner: {
-      type: String,
-      required: true,
-    },
     title: {
       type: String,
       required: true,
@@ -18,22 +14,33 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    deadline: {
-      type: Number,
+    locationtion: {
+      type: String,
       required: true,
     },
     amountToPay: {
       type: Number,
       default: 0,
     },
+    isBid: {
+      type: Boolean,
+      default: false,
+    },
+    doneBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     createdAt: {
       type: Date,
       default: new Date(),
     },
+    image: String,
+    bidds: [],
   },
   { timestamps: true }
 );
 
-const Job = mongoose.model("job", bidSchema);
+const Job = mongoose.model("job", jobSchema);
 
 export default Job;
