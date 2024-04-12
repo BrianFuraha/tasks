@@ -96,7 +96,7 @@ export const rateRunner = async (req, res, next) => {
 
       const averageRate = numComments > 0 ? totalRates / numComments : 0;
 
-      user.ratings = averageRate;
+      user.ratings = averageRate.toFixed(1);
       user.save();
       res.status(200).json("Runner rated successfully");
     } catch (error) {

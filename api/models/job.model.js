@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const jobSchema = new mongoose.Schema(
   {
     ownerId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     title: {
