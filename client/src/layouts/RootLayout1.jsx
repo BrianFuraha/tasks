@@ -1,8 +1,10 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Navbar, Sidebar } from "../components";
 
-export default function RootLayout1() {  
-  return (
+export default function RootLayout1() {
+  const { currentUser } = useSelector((state) => state.user);
+  return currentUser ? (
     <div className="bg-white">
       <div className="relative isolate px-6 pt-14 lg:px-8 ">
         <div
@@ -41,7 +43,7 @@ export default function RootLayout1() {
         </div>
       </div>
     </div>
-  );
+  ) : <Navigate to='/signin'/>;
 }
 {
   /* <div className="relative sm:-8 p-4 min-h-screen flex-row">

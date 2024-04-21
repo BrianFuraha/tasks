@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-// import { type } from "os";
+
 
 const commentSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true,
   },
   rate: {
@@ -15,7 +14,7 @@ const commentSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   image: String,
 });
@@ -39,6 +38,7 @@ const userSchema = new mongoose.Schema(
     about: { type: String },
     ratings: { type: Number, default: 0 },
     comments: [commentSchema],
+    category: [],
     userType: {
       type: String,
       default: "user",

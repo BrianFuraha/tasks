@@ -20,6 +20,45 @@ export const getUser = async (req, res, next) => {
   }
 };
 
+export const getRunners = async (req, res, next) => {
+  const { category } = req.params;
+  try {
+    const users = await UserModel.User.find({ category: category });
+
+    if (!users) {
+      const { password: pass, ...rest } = users._doc;
+      res.status(200).json(rest);
+    } else {
+      res.status(404).json("User does not exist!!!");
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export const getAllRunners = async (req, res, next) => {
+  try {
+    const users = await UserModel.User.find();
+    console.log(users);
+    users.forEach((user) => {
+      user._id = user.category.map(String);
+    });
+    // const user = await UserModel.User.findById(id);
+    // const users = await UserModel.User.find();
+
+    // const users = await UserModel.User.where("userType").equals("user").exec();
+    // console.log("Users:", users);
+
+    if (!user || user.length === 0) {
+      return res.status(404).json("No runners found!");
+    }
+    return res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateUser = async (req, res, next) => {
   const id = req.params.id;
   const { currentUserId, currentUserIsAdmin, password } = req.body;

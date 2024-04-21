@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
 
+const bidSchema = new mongoose.Schema({
+  bidderId: {
+    type: String,
+    required: true,
+  },
+});
 const jobSchema = new mongoose.Schema(
   {
     ownerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    title: {
       type: String,
       required: true,
     },
@@ -15,33 +16,31 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    locationtion: {
+    location: {
       type: String,
       required: true,
-    },
-    amountToPay: {
-      type: Number,
-      default: 0,
     },
     isBid: {
       type: Boolean,
       default: false,
     },
     doneBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     },
     createdAt: {
       type: Date,
-      default: new Date(),
+      default: Date.now,
     },
     image: String,
-    bidds: [],
+    bids: [bidSchema],
+    category: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
-const Job = mongoose.model("job", jobSchema);
+const Job = mongoose.model("Job", jobSchema);
 
-export default Job;
+export default {Job, bidSchema};

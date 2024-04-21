@@ -2,13 +2,13 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
 import { errorHandler } from "../utils/error.js";
-import User from "../models/user.model.js";
+import UserModel from "../models/user.model.js";
 
 export const signup = async (req, res, next) => {
   const { email, password } = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
-  const newUser = new User({
+  const newUser = new UserModel.User({
     email,
     password: hashedPassword,
   });
@@ -25,7 +25,7 @@ export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const validUser = await User.findOne({ email });
+    const validUser = await UserModel.User.findOne({ email });
     if (!validUser) return next(errorHandler(404, "User not found!!!"));
 
     const validPassword = await bcryptjs.compare(password, validUser.password);
@@ -46,7 +46,7 @@ export const signin = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await UserModel.User.findOne({ email: req.body.email });
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
@@ -57,13 +57,15 @@ export const google = async (req, res, next) => {
         .status(200)
         .json(rest);
     } else {
-      const genPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+      const genPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(genPassword, 10);
-      const newUser = new User({
+      const newUser = new UserModel.User({
         email: req.body.email,
         username: req.body.username,
         password: hashedPassword,
-        avatar: req.body.image
+        avatar: req.body.image,
       });
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
@@ -76,4 +78,4 @@ export const google = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
