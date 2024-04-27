@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BellIcon } from "@heroicons/react/24/outline";
 
@@ -8,6 +8,7 @@ import { navlinks, navlink } from "../../constants";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
@@ -20,6 +21,7 @@ export default function Navbar() {
       navigate("/");
     }
   }, [currentUser, navigate]);
+
   useEffect(() => {
     const activePage =
       navlinks.find((link) => link.link === location.pathname) ||
@@ -30,7 +32,7 @@ export default function Navbar() {
     } else if (activePage && activePage.name === "profile") {
       setSearchPlaceholder("Search for runners");
     } else {
-      setSearchPlaceholder(`Search for ${activePage.name}`);
+      setSearchPlaceholder(`Search for ${activePage ? activePage.name : ""}`);
     }
   }, [location.pathname]);
 
@@ -53,7 +55,7 @@ export default function Navbar() {
       </div>
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <p className="mt-2.5">{currentUser.username}</p>
-        <Link to="/profile">
+        <Link to="/myProfile">
           <div>
             <img
               src={currentUser.avatar}

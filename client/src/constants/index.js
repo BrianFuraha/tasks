@@ -19,7 +19,7 @@ export const navlinks = [
   {
     name: "profile",
     imgUrl: images.profile,
-    link: "/profile",
+    link: "/myProfile",
   },
 ];
 
