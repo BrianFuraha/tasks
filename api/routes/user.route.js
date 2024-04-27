@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/:id", getUser);
 router.get("/getRunners/:category", getRunners);
-router.get("/getAllRunners", getAllRunners);
+router.get("/", getAllRunners);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.put("/:id/rate", rateRunner);

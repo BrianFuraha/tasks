@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   return (
     <form>
       <div className="space-y-12">
@@ -28,104 +30,62 @@ export default function Profile() {
                 className="h-20 w-20 text-gray-300 rounded-full object-cover "
                 aria-hidden="true"
               />
+
               <button
+                id="file-upload"
+                name="file-upload"
                 type="button"
+                // Change type to "button" to prevent form submission
                 className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                onClick={() => document.getElementById("file-input").click()} // Trigger file input click event
               >
                 Change
               </button>
+
+              <input
+                id="file-input"
+                name="file-upload"
+                type="file"
+                className="hidden"
+                onChange={(e) => handleFileUpload(e.target.files[0])} // Handle file upload when file is selected
+              />
             </div>
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Change Username
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
-                    username:
-                  </span>
-                  <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    autoComplete="username"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder={currentUser.username}
+            {currentUser.userType == "runner" ? (
+              <div className="col-span-full">
+                <label
+                  htmlFor="about"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  About
+                </label>
+                <div className="mt-2">
+                  <textarea
+                    id="about"
+                    name="about"
+                    rows={3}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={""}
                   />
                 </div>
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  Write a few sentences about yourself.
+                </p>
               </div>
-            </div>
-
-            <div className="col-span-full">
-              <label
-                htmlFor="about"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                About
-              </label>
-              <div className="mt-2">
-                <textarea
-                  id="about"
-                  name="about"
-                  rows={3}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  defaultValue={""}
-                />
-              </div>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                Write a few sentences about yourself.
-              </p>
-            </div>
-
-            {/* <div className="col-span-full">
-              <label
-                htmlFor="cover-photo"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Cover photo
-              </label>
-              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                <div className="text-center">
-                  <PhotoIcon
-                    className="mx-auto h-12 w-12 text-gray-300"
-                    aria-hidden="true"
-                  />
-                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                    <label
-                      htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                    >
-                      <span>Upload a file</span>
-                      <input
-                        id="file-upload"
-                        name="file-upload"
-                        type="file"
-                        className="sr-only"
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs leading-5 text-gray-600">
-                    PNG, JPG, GIF up to 10MB
-                  </p>
-                </div>
-              </div>
-            </div> */}
+            ) : (
+              <></>
+            )}
           </div>
         </div>
 
-        <div className="border-b border-gray-900/10 pb-12">
+        <div className="border-b border-gray-900/10 pb-12 pt-0">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             Personal Information
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Use a permanent address where you can receive mail.
+            Change username and password here.
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -167,6 +127,36 @@ export default function Profile() {
 
             <div className="sm:col-span-4">
               <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                New Password
+              </label>
+              <div className="mt-2">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+              <label
+                htmlFor="cpassword"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Confirm Password
+              </label>
+              <div className="mt-2">
+                <input
+                  id="cpassword"
+                  name="cpassword"
+                  type="password"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+            <div className="sm:col-span-4">
+              <label
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
@@ -178,6 +168,7 @@ export default function Profile() {
                   name="email"
                   type="email"
                   placeholder={currentUser.email}
+                  disabled
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -186,22 +177,411 @@ export default function Profile() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="country"
+                htmlFor="county"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Country
+                Change county
               </label>
               <div className="mt-2">
                 <select
-                  id="country"
-                  name="country"
-                  autoComplete="country-name"
+                  id="county"
+                  name="county"
+                  autoComplete="county-name"
                   placeholder="user location here"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
-                  <option>United States</option>
-                  <option>Canada</option>
-                  <option>Mexico</option>
+                  <optgroup label="Baringo">
+                    <option value="Baringo Central">Baringo Central</option>
+                    <option value="Baringo North">Baringo North</option>
+                    <option value="Baringo South">Baringo South</option>
+                    <option value="Eldama Ravine">Eldama Ravine</option>
+                    <option value="Mogotio">Mogotio</option>
+                    <option value="Tiaty">Tiaty</option>
+                  </optgroup>
+                  <optgroup label="Bomet">
+                    <option value="Bomet Central">Bomet Central</option>
+                    <option value="Bomet East">Bomet East</option>
+                    <option value="Chepalungu">Chepalungu</option>
+                    <option value="Konoin">Konoin</option>
+                    <option value="Sotik">Sotik</option>
+                  </optgroup>
+                  <optgroup label="Bungoma">
+                    <option value="Bumula">Bumula</option>
+                    <option value="Kanduyi">Kanduyi</option>
+                    <option value="Kimilili">Kimilili</option>
+                    <option value="Mount Elgon">Mount Elgon</option>
+                    <option value="Sirisia">Sirisia</option>
+                    <option value="Tongaren">Tongaren</option>
+                    <option value="Webuye East">Webuye East</option>
+                    <option value="Webuye West">Webuye West</option>
+                  </optgroup>
+                  <optgroup label="Busia">
+                    <option value="Budalangi">Budalangi</option>
+                    <option value="Butula">Butula</option>
+                    <option value="Funyula">Funyula</option>
+                    <option value="Nambele">Nambele</option>
+                    <option value="Teso North">Teso North</option>
+                    <option value="Teso South">Teso South</option>
+                  </optgroup>
+                  <optgroup label="Elgeyo-Marakwet">
+                    <option value="Keiyo North">Keiyo North</option>
+                    <option value="Keiyo South">Keiyo South</option>
+                    <option value="Marakwet East">Marakwet East</option>
+                    <option value="Marakwet West">Marakwet West</option>
+                  </optgroup>
+                  <optgroup label="Embu">
+                    <option value="Manyatta">Manyatta</option>
+                    <option value="Mbeere North">Mbeere North</option>
+                    <option value="Mbeere South">Mbeere South</option>
+                  </optgroup>
+                  <optgroup label="Garissa">
+                    <option value="Dadaab">Dadaab</option>
+                    <option value="Fafi">Fafi</option>
+                    <option value="Garissa Township">Garissa Township</option>
+                    <option value="Ijara">Ijara</option>
+                    <option value="Lagdera">Lagdera</option>
+                  </optgroup>
+                  <optgroup label="Homa Bay">
+                    <option value="Homa Bay Town">Homa Bay Town</option>
+                    <option value="Kasipul">Kasipul</option>
+                    <option value="Kabondo Kasipul">Kabondo Kasipul</option>
+                    <option value="Ndhiwa">Ndhiwa</option>
+                    <option value="Rachuonyo North">Rachuonyo North</option>
+                    <option value="Rachuonyo East">Rachuonyo East</option>
+                    <option value="Rachuonyo South">Rachuonyo South</option>
+                    <option value="Suba North">Suba North</option>
+                    <option value="Suba South">Suba South</option>
+                  </optgroup>
+                  <optgroup label="Isiolo">
+                    <option value="Isiolo North">Isiolo North</option>
+                    <option value="Isiolo South">Isiolo South</option>
+                    <option value="Garbatulla">Garbatulla</option>
+                  </optgroup>
+                  <optgroup label="Kajiado">
+                    <option value="Kajiado Central">Kajiado Central</option>
+                    <option value="Kajiado East">Kajiado East</option>
+                    <option value="Kajiado North">Kajiado North</option>
+                    <option value="Kajiado West">Kajiado West</option>
+                    <option value="Loitokitok">Loitokitok</option>
+                    <option value="Mashuuru">Mashuuru</option>
+                  </optgroup>
+                  <optgroup label="Kakamega">
+                    <option value="Butere/Mumias East">
+                      Butere/Mumias East
+                    </option>
+                    <option value="Butsotso East">Butsotso East</option>
+                    <option value="Kabuchai">Kabuchai</option>
+                    <option value="Khwisero">Khwisero</option>
+                    <option value="Lugari">Lugari</option>
+                    <option value="Lurambi">Lurambi</option>
+                  </optgroup>
+                  <optgroup label="Kericho">
+                    <option value="Ainamoi">Ainamoi</option>
+                    <option value="Belgut">Belgut</option>
+                    <option value="Bureti">Bureti</option>
+                    <option value="Kipkelion East">Kipkelion East</option>
+                    <option value="Kipkelion West">Kipkelion West</option>
+                  </optgroup>
+                  <optgroup label="Kiambu">
+                    <option value="Gatundu North">Gatundu North</option>
+                    <option value="Gatundu South">Gatundu South</option>
+                    <option value="Githunguri">Githunguri</option>
+                    <option value="Juja">Juja</option>
+                    <option value="Kabete">Kabete</option>
+                    <option value="Kiambaa">Kiambaa</option>
+                    <option value="Kiambu">Kiambu</option>
+                    <option value="Kikuyu">Kikuyu</option>
+                    <option value="Lari">Lari</option>
+                    <option value="Limuru">Limuru</option>
+                    <option value="Ruiru">Ruiru</option>
+                    <option value="Thika East">Thika East</option>
+                    <option value="Thika West">Thika West</option>
+                    <option value="Turkana Central">Turkana Central</option>
+                    <option value="Turkana East">Turkana East</option>
+                    <option value="Turkana North">Turkana North</option>
+                    <option value="Turkana South">Turkana South</option>
+                    <option value="Turkana West">Turkana West</option>
+                  </optgroup>
+                  <optgroup label="Kilifi">
+                    <option value="Kaloleni">Kaloleni</option>
+                    <option value="Kilifi North">Kilifi North</option>
+                    <option value="Kilifi South">Kilifi South</option>
+                    <option value="Malindi">Malindi</option>
+                    <option value="Magarini">Magarini</option>
+                    <option value="Rabai">Rabai</option>
+                  </optgroup>
+                  <optgroup label="Kirinyaga">
+                    <option value="Gichugu">Gichugu</option>
+                    <option value="Kirinyaga Central">Kirinyaga Central</option>
+                    <option value="Kirinyaga East">Kirinyaga East</option>
+                    <option value="Kirinyaga South">Kirinyaga South</option>
+                  </optgroup>
+                  <optgroup label="Kisii">
+                    <option value="Bobasi">Bobasi</option>
+                    <option value="Bomachoge Borabu">Bomachoge Borabu</option>
+                    <option value="Bomachoge Chache">Bomachoge Chache</option>
+                    <option value="Bonchari">Bonchari</option>
+                    <option value="Kitutu Chache North">
+                      Kitutu Chache North
+                    </option>
+                    <option value="Kitutu Chache South">
+                      Kitutu Chache South
+                    </option>
+                    <option value="Nyamira North">Nyamira North</option>
+                    <option value="Nyamira South">Nyamira South</option>
+                  </optgroup>
+                  <optgroup label="Kisumu">
+                    <option value="Kisumu Central">Kisumu Central</option>
+                    <option value="Kisumu East">Kisumu East</option>
+                    <option value="Kisumu West">Kisumu West</option>
+                    <option value="Seme">Seme</option>
+                    <option value="Nyando">Nyando</option>
+                  </optgroup>
+                  <optgroup label="Kitui">
+                    <option value="Kitui Central">Kitui Central</option>
+                    <option value="Kitui East">Kitui East</option>
+                    <option value="Kitui Rural">Kitui Rural</option>
+                    <option value="Kitui South">Kitui South</option>
+                    <option value="Kitui West">Kitui West</option>
+                  </optgroup>
+                  <optgroup label="Kwale">
+                    <option value="Kinango">Kinango</option>
+                    <option value="Lunga Lunga">Lunga Lunga</option>
+                    <option value="Matuga">Matuga</option>
+                    <option value="Msambweni">Msambweni</option>
+                  </optgroup>
+                  <optgroup label="Laikipia">
+                    <option value="Laikipia East">Laikipia East</option>
+                    <option value="Laikipia North">Laikipia North</option>
+                    <option value="Laikipia West">Laikipia West</option>
+                  </optgroup>
+                  <optgroup label="Lamu">
+                    <option value="Lamu East">Lamu East</option>
+                    <option value="Lamu West">Lamu West</option>
+                  </optgroup>
+                  <optgroup label="Machakos">
+                    <option value="Athi River">Athi River</option>
+                    <option value="Kangundo">Kangundo</option>
+                    <option value="Kathiani">Kathiani</option>
+                    <option value="Masinga">Masinga</option>
+                    <option value="Matungulu">Matungulu</option>
+                    <option value="Mavoko">Mavoko</option>
+                    <option value="Mwala">Mwala</option>
+                    <option value="Yatta">Yatta</option>
+                  </optgroup>
+                  <optgroup label="Makueni">
+                    <option value="Kaiti">Kaiti</option>
+                    <option value="Kibwezi East">Kibwezi East</option>
+                    <option value="Kibwezi West">Kibwezi West</option>
+                    <option value="Kilome">Kilome</option>
+                    <option value="Makueni">Makueni</option>
+                    <option value="Mbooni">Mbooni</option>
+                  </optgroup>
+                  <optgroup label="Mandera">
+                    <option value="Banissa">Banissa</option>
+                    <option value="Lafey">Lafey</option>
+                    <option value="Mandera East">Mandera East</option>
+                    <option value="Mandera North">Mandera North</option>
+                    <option value="Mandera South">Mandera South</option>
+                  </optgroup>
+                  <optgroup label="Marsabit">
+                    <option value="Laisamis">Laisamis</option>
+                    <option value="Loiyangalani">Loiyangalani</option>
+                    <option value="Marsabit Central">Marsabit Central</option>
+                    <option value="Moyale">Moyale</option>
+                    <option value="North Horr">North Horr</option>
+                    <option value="Saku">Saku</option>
+                  </optgroup>
+                  <optgroup label="Meru">
+                    <option value="Buuri">Buuri</option>
+                    <option value="Igembe Central">Igembe Central</option>
+                    <option value="Igembe North">Igembe North</option>
+                    <option value="Igembe South">Igembe South</option>
+                    <option value="Imenti Central">Imenti Central</option>
+                    <option value="Imenti North">Imenti North</option>
+                    <option value="Imenti South">Imenti South</option>
+                    <option value="Meru Central">Meru Central</option>
+                    <option value="Meru North">Meru North</option>
+                    <option value="Meru South">Meru South</option>
+                    <option value="Tigania East">Tigania East</option>
+                    <option value="Tigania West">Tigania West</option>
+                    <option value="Tharaka">Tharaka</option>
+                  </optgroup>
+                  <optgroup label="Migori">
+                    <option value="Awendo">Awendo</option>
+                    <option value="Kuria East">Kuria East</option>
+                    <option value="Kuria West">Kuria West</option>
+                    <option value="Migori">Migori</option>
+                    <option value="Nyatike">Nyatike</option>
+                    <option value="Rongo">Rongo</option>
+                    <option value="Suna East">Suna East</option>
+                    <option value="Suna West">Suna West</option>
+                  </optgroup>
+                  <optgroup label="Mombasa">
+                    <option value="Changamwe">Changamwe</option>
+                    <option value="Jomvu">Jomvu</option>
+                    <option value="Kisauni">Kisauni</option>
+                    <option value="Nyali">Nyali</option>
+                    <option value="Likoni">Likoni</option>
+                    <option value="Mvita">Mvita</option>
+                  </optgroup>
+                  <optgroup label="Murang'a">
+                    <option value="Gatanga">Gatanga</option>
+                    <option value="Kahuro">Kahuro</option>
+                    <option value="Kandara">Kandara</option>
+                    <option value="Kangema">Kangema</option>
+                    <option value="Kigumo">Kigumo</option>
+                    <option value="Maragua">Maragua</option>
+                    <option value="Mathioya">Mathioya</option>
+                    <option value="Kiharu">Kiharu</option>
+                    <option value="Kigumo">Kigumo</option>
+                    <option value="Kiharu">Kiharu</option>
+                  </optgroup>
+                  <optgroup label="Nairobi">
+                    <option value="Dagoretti North">Dagoretti North</option>
+                    <option value="Dagoretti South">Dagoretti South</option>
+                    <option value="Embakasi Central">Embakasi Central</option>
+                    <option value="Embakasi East">Embakasi East</option>
+                    <option value="Embakasi North">Embakasi North</option>
+                    <option value="Embakasi South">Embakasi South</option>
+                    <option value="Embakasi West">Embakasi West</option>
+                    <option value="Kamukunji">Kamukunji</option>
+                    <option value="Kasarani">Kasarani</option>
+                    <option value="Kibra">Kibra</option>
+                    <option value="Lang'ata">Lang'ata</option>
+                    <option value="Makadara">Makadara</option>
+                    <option value="Mathare">Mathare</option>
+                    <option value="Nairobi West">Nairobi West</option>
+                    <option value="Roysambu">Roysambu</option>
+                    <option value="Ruaraka">Ruaraka</option>
+                    <option value="Starehe">Starehe</option>
+                    <option value="Westlands">Westlands</option>
+                  </optgroup>
+                  <optgroup label="Nakuru">
+                    <option value="Bahati">Bahati</option>
+                    <option value="Gilgil">Gilgil</option>
+                    <option value="Kuresoi North">Kuresoi North</option>
+                    <option value="Kuresoi South">Kuresoi South</option>
+                    <option value="Molo">Molo</option>
+                    <option value="Naivasha">Naivasha</option>
+                    <option value="Nakuru East">Nakuru East</option>
+                    <option value="Nakuru North">Nakuru North</option>
+                    <option value="Nakuru West">Nakuru West</option>
+                    <option value="Njoro">Njoro</option>
+                    <option value="Rongai">Rongai</option>
+                    <option value="Subukia">Subukia</option>
+                  </optgroup>
+                  <optgroup label="Nandi">
+                    <option value="Aldai">Aldai</option>
+                    <option value="Chesumei">Chesumei</option>
+                    <option value="Emgwen">Emgwen</option>
+                    <option value="Mosop">Mosop</option>
+                    <option value="Tindiret">Tindiret</option>
+                  </optgroup>
+                  <optgroup label="Narok">
+                    <option value="Narok East">Narok East</option>
+                    <option value="Narok North">Narok North</option>
+                    <option value="Narok South">Narok South</option>
+                    <option value="Narok West">Narok West</option>
+                    <option value="Transmara East">Transmara East</option>
+                    <option value="Transmara West">Transmara West</option>
+                  </optgroup>
+                  <optgroup label="Nyamira">
+                    <option value="Borabu">Borabu</option>
+                    <option value="Manga">Manga</option>
+                    <option value="Masaba North">Masaba North</option>
+                    <option value="Masaba South">Masaba South</option>
+                  </optgroup>
+                  <optgroup label="Nyandarua">
+                    <option value="Kinangop">Kinangop</option>
+                    <option value="Kipipiri">Kipipiri</option>
+                    <option value="Ndaragwa">Ndaragwa</option>
+                    <option value="Ol Kalou">Ol Kalou</option>
+                  </optgroup>
+                  <optgroup label="Nyeri">
+                    <option value="Kieni East">Kieni East</option>
+                    <option value="Kieni West">Kieni West</option>
+                    <option value="Mathira East">Mathira East</option>
+                    <option value="Mathira West">Mathira West</option>
+                    <option value="Mukurweini">Mukurweini</option>
+                    <option value="Nyeri Central">Nyeri Central</option>
+                    <option value="Tetu">Tetu</option>
+                  </optgroup>
+                  <optgroup label="Samburu">
+                    <option value="Samburu Central">Samburu Central</option>
+                    <option value="Samburu East">Samburu East</option>
+                    <option value="Samburu North">Samburu North</option>
+                    <option value="Samburu West">Samburu West</option>
+                  </optgroup>
+                  <optgroup label="Siaya">
+                    <option value="Alego Usonga">Alego Usonga</option>
+                    <option value="Bondo">Bondo</option>
+                    <option value="Gem">Gem</option>
+                    <option value="Rarieda">Rarieda</option>
+                    <option value="Ugenya">Ugenya</option>
+                    <option value="Ugunja">Ugunja</option>
+                  </optgroup>
+                  <optgroup label="Taita-Taveta">
+                    <option value="Mwatate">Mwatate</option>
+                    <option value="Taveta">Taveta</option>
+                    <option value="Voi">Voi</option>
+                    <option value="Wundanyi">Wundanyi</option>
+                  </optgroup>
+                  <optgroup label="Tana River">
+                    <option value="Bura">Bura</option>
+                    <option value="Galole">Galole</option>
+                    <option value="Garsen">Garsen</option>
+                  </optgroup>
+                  <optgroup label="Tharaka Nithi">
+                    <option value="Chuka">Chuka</option>
+                    <option value="Maara">Maara</option>
+                    <option value="Tharaka">Tharaka</option>
+                  </optgroup>
+                  <optgroup label="Trans-Zoia">
+                    <option value="Cherang'any">Cherang'any</option>
+                    <option value="Endebess">Endebess</option>
+                    <option value="Kiminini">Kiminini</option>
+                    <option value="Kwanza">Kwanza</option>
+                    <option value="Saboti">Saboti</option>
+                  </optgroup>
+                  <optgroup label="Turkana">
+                    <option value="Turkana Central">Turkana Central</option>
+                    <option value="Turkana East">Turkana East</option>
+                    <option value="Turkana North">Turkana North</option>
+                    <option value="Turkana South">Turkana South</option>
+                    <option value="Turkana West">Turkana West</option>
+                  </optgroup>
+                  <optgroup label="Uasin Gishu">
+                    <option value="Ainabkoi">Ainabkoi</option>
+                    <option value="Kapseret">Kapseret</option>
+                    <option value="Kesses">Kesses</option>
+                    <option value="Moiben">Moiben</option>
+                    <option value="Soy">Soy</option>
+                    <option value="Turbo">Turbo</option>
+                  </optgroup>
+                  <optgroup label="Vihiga">
+                    <option value="Emuhaya">Emuhaya</option>
+                    <option value="Hamisi">Hamisi</option>
+                    <option value="Luanda">Luanda</option>
+                    <option value="Sabatia">Sabatia</option>
+                    <option value="Vihiga">Vihiga</option>
+                  </optgroup>
+                  <optgroup label="Wajir">
+                    <option value="Eldas">Eldas</option>
+                    <option value="Tarbaj">Tarbaj</option>
+                    <option value="Wajir East">Wajir East</option>
+                    <option value="Wajir North">Wajir North</option>
+                    <option value="Wajir South">Wajir South</option>
+                    <option value="Wajir West">Wajir West</option>
+                  </optgroup>
+                  <optgroup label="West Pokot">
+                    <option value="Chepareria">Chepareria</option>
+                    <option value="Kacheliba">Kacheliba</option>
+                    <option value="Kapenguria">Kapenguria</option>
+                    <option value="Pokot Central">Pokot Central</option>
+                    <option value="Pokot North">Pokot North</option>
+                    <option value="Pokot South">Pokot South</option>
+                  </optgroup>
                 </select>
               </div>
             </div>
@@ -212,6 +592,9 @@ export default function Profile() {
         <button
           type="button"
           className="text-sm font-semibold leading-6 text-gray-900"
+          onClick={() => {
+            navigate("/myProfile");
+          }}
         >
           Cancel
         </button>

@@ -38,24 +38,49 @@ export const getRunners = async (req, res, next) => {
 };
 
 export const getAllRunners = async (req, res, next) => {
-  try {
-    const users = await UserModel.User.find();
-    console.log(users);
-    users.forEach((user) => {
-      user._id = user.category.map(String);
-    });
-    // const user = await UserModel.User.findById(id);
-    // const users = await UserModel.User.find();
+  const { category } = req.query; // Assuming category is passed as a query parameter
+  if (!category) {
+    try {
+      let query = { userType: "runner" }; // Default query to find runners
+      if (category) {
+        // If category is provided, add it to the query
+        query.category = category;
+      }
 
-    // const users = await UserModel.User.where("userType").equals("user").exec();
-    // console.log("Users:", users);
+      const runners = await UserModel.User.find(query);
 
-    if (!user || user.length === 0) {
-      return res.status(404).json("No runners found!");
+      if (!runners || runners.length === 0) {
+        return res
+          .status(404)
+          .json("No runners found for the specified category!");
+      }
+
+      const runnersData = runners.map(({ _doc }) => {
+        const { password, ...rest } = _doc;
+        return rest;
+      });
+
+      res.status(200).json(runnersData);
+    } catch (error) {
+      next(error);
     }
-    return res.status(200).json(users);
-  } catch (error) {
-    next(error);
+  } else {
+    try {
+      const users = await UserModel.User.find({});
+      const runners = users.filter((user) => user.userType === "runner");
+
+      if (!runners || runners.length === 0) {
+        return res.status(404).json("No runners found!");
+      }
+      const runnersData = runners.map(({ _doc }) => {
+        const { password, ...rest } = _doc;
+        return rest;
+      });
+
+      res.status(200).json(runnersData);
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
