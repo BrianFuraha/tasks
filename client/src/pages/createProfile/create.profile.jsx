@@ -1,9 +1,52 @@
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../firebase";
 
 export default function Profile() {
+  const fileRef = useRef(null);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [file, setFile] = useState(undefined);
+  const [fileUploadError, setFileUploadError] = useState(false);
+  const [filePer, setFilePer] = useState(0);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+  const handleFileUpload = () => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePer(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFormData({ ...formData, avatar: downloadURL });
+        });
+      }
+    );
+  };
   return (
     <form>
       <div className="space-y-12">
@@ -25,7 +68,7 @@ export default function Profile() {
             </label>
             <div className="mt-2 flex items-center gap-x-3">
               <img
-                src={currentUser.avatar}
+                src={formData.avatar || currentUser.avatar}
                 alt="profile"
                 className="h-20 w-20 text-gray-300 rounded-full object-cover "
                 aria-hidden="true"
@@ -37,17 +80,33 @@ export default function Profile() {
                 type="button"
                 // Change type to "button" to prevent form submission
                 className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                onClick={() => document.getElementById("file-input").click()} // Trigger file input click event
+                onClick={() => fileRef.current.click()} // Trigger file input click event
               >
                 Change
               </button>
+              <p>
+                {fileUploadError ? (
+                  <span className=" text-red-700">
+                    Image Upload Error: Size too large (2mb max) or wrong file
+                    format
+                  </span>
+                ) : filePer > 0 && filePer < 100 ? (
+                  <span className=" text-gray-800">{`Uploading ${filePer}%`}</span>
+                ) : filePer == 100 ? (
+                  <span className=" text-green-700">
+                    image successfully uploaded
+                  </span>
+                ) : (
+                  ""
+                )}
+              </p>
 
               <input
-                id="file-input"
-                name="file-upload"
+                ref={fileRef}
                 type="file"
-                className="hidden"
-                onChange={(e) => handleFileUpload(e.target.files[0])} // Handle file upload when file is selected
+                hidden
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])} // Handle file upload when file is selected
               />
             </div>
           </div>
@@ -91,7 +150,7 @@ export default function Profile() {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
-                htmlFor="first-name"
+                htmlFor="firstname"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 First name
@@ -99,8 +158,8 @@ export default function Profile() {
               <div className="mt-2">
                 <input
                   type="text"
-                  name="first-name"
-                  id="first-name"
+                  name="firstname"
+                  id="firstname"
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -109,7 +168,7 @@ export default function Profile() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="last-name"
+                htmlFor="lastname"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Last name
@@ -117,8 +176,8 @@ export default function Profile() {
               <div className="mt-2">
                 <input
                   type="text"
-                  name="last-name"
-                  id="last-name"
+                  name="lastname"
+                  id="lastname"
                   autoComplete="family-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
