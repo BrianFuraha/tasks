@@ -8,7 +8,7 @@ router.get("/:id", getUser);
 router.get("/getRunners/:category", getRunners);
 router.get("/", getAllRunners);
 router.put("/updateUser/:id", verifyToken, updateUser);
-router.delete("/:id", deleteUser);
+router.delete("/delete/:id", verifyToken, deleteUser);
 router.put("/:id/rate", rateRunner);
 
 export default router;

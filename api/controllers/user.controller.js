@@ -118,19 +118,14 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  const id = req.params.id;
-
-  const { currentUserId, currentUserIsAdmin } = req.body;
-
-  if (currentUserId == id || currentUserIsAdmin) {
-    try {
-      await UserModel.User.findByIdAndDelete(id);
-      res.status(200).json("User Deleted Successfully!");
-    } catch (error) {
-      next(error);
-    }
-  } else {
-    res.status(403).json("Access Denied!");
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You can only delete your own account!"));
+  try {
+    await UserModel.User.findByIdAndDelete(req.params.id);
+    res.clearCookie("access_token");
+    res.status(200).json("User has been deleted!");
+  } catch (error) {
+    next(error);
   }
 };
 

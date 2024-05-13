@@ -14,6 +14,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserFailure,
+  deleteUserSuccess,
 } from "../../redux/user/userSlice";
 
 export default function Profile() {
@@ -104,6 +107,22 @@ export default function Profile() {
       navigate("/profile");
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  };
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
   return (
@@ -744,6 +763,12 @@ export default function Profile() {
               ? "Usage of speacial characters is forbiden"
               : ""}
           </p>
+          <span
+            onClick={handleDeleteUser}
+            className="text-red-700 cursor-pointer"
+          >
+            Delete account
+          </span>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <p className=" text-xs">Click update twice</p>
