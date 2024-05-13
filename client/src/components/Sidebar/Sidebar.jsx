@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-
 import { images } from "../../assets";
 import { navlinks, navlink } from "../../constants";
+import { useDispatch } from "react-redux";
+import {
+  deleteUserFailure,
+  deleteUserSuccess,
+  signOutUserStart,
+} from "../../redux/user/userSlice";
 
 const Icon = ({ styles, name, imgUrl, isActive, handleClick, disabled }) => (
   <div
@@ -28,7 +33,8 @@ const Icon = ({ styles, name, imgUrl, isActive, handleClick, disabled }) => (
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  
+  const dispatch = useDispatch();
+
   const [isActive, setIsActive] = useState("dashboard");
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
@@ -61,10 +67,18 @@ export default function Sidebar() {
               key={link.name}
               {...link}
               isActive={isActive}
-              handleClick={() => {
-                if (!link.disabled) {
-                  setIsActive(link.name);
-                  navigate(link.link);
+              handleClick={async () => {
+                try {
+                  dispatch(signOutUserStart());
+                  const res = await fetch("/api/auth/signout");
+                  const data = await res.json();
+                  if (data.success === false) {
+                    dispatch(deleteUserFailure(data.message));
+                    return;
+                  }
+                  dispatch(deleteUserSuccess(data));
+                } catch (error) {
+                  dispatch(deleteUserFailure(data.message));
                 }
               }}
             />
