@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
 import UserModel from "../models/user.model.js";
+import { errorHandler } from "../utils/error.js";
 
 export const getUser = async (req, res, next) => {
   const id = req.params.id;
@@ -85,24 +86,34 @@ export const getAllRunners = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  const id = req.params.id;
-  const { currentUserId, currentUserIsAdmin, password } = req.body;
-
-  if (id === currentUserId && !currentUserIsAdmin) {
-    try {
-      if (password) {
-        const hashedPassword = bcryptjs.hashSync(password, 10);
-        req.body.password = hashedPassword;
-      }
-      const user = await UserModel.User.findByIdAndUpdate(id, req.body, {
-        new: true,
-      });
-      res.status(200).json(user);
-    } catch (error) {
-      next(error);
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You can only update your own account!"));
+  try {
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
-  } else {
-    res.status(403).json("Access Denied!");
+
+    const updatedUser = await UserModel.User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+          avatar: req.body.avatar,
+          location: req.body.location,
+          about: req.body.about,
+          category: req.body.category,
+        },
+      },
+      { new: true }
+    );
+
+    const { password, ...rest } = updatedUser._doc;
+
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
   }
 };
 

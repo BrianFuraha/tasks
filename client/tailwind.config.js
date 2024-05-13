@@ -6,5 +6,5 @@ module.exports = withMT({
   theme: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms", "tw-elements-react/dist/plugin.cjs")],
 });
