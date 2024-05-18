@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Conversation } from "../../components";
-import { userChats } from "../../api/chats.Request";
+import { ChatBox, Conversation } from "../../components";
+
+
+import "./chat.css";
+import { userChats } from "../../api/requests";
 
 export default function chats() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [chats, setChats] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
 
   useEffect(() => {
     const getChats = async () => {
       try {
         const { data } = await userChats(currentUser._id);
         setChats(data);
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -20,14 +23,13 @@ export default function chats() {
     getChats();
   }, [currentUser]);
   return (
-    <div className="relative isolate px-6 pt-1 lg:px-8 flex-col grid grid-cols-2 gap-4">
+    <div className="Chat">
       {/*left side */}
-      <div className=" w-[90%] flex flex-col gap-4">
-        <div className=" flex flex-col gap-4 rounded-2xl h-auto min-h-[80vh] overflow-hidden pl-3 bg-white shadow-md">
-          <h2 className="pl-1">leftchats</h2>
-          <div className=" flex flex-col gap-4">
+      <div className="Left-side-chat ">
+        <div className="Chat-container hide-scrollbar bg-white shadow-md sm:w-[200px] w-[100px] h-[590px]">
+          <div className="Chat-list">
             {chats.map((chat) => (
-              <div key={chat._id}>
+              <div onClick={() => setCurrentChat(chat)}>
                 <Conversation data={chat} currentUserId={currentUser._id} />
               </div>
             ))}
@@ -36,7 +38,9 @@ export default function chats() {
       </div>
 
       {/*right side */}
-      <div className=" w-auto flex flex-col gap-4">rightchats</div>
+      <div className=" sm:ml-1 ml-7 Right-side-chat">
+        <ChatBox chat={currentChat} currentUser={currentUser._id} />
+      </div>
     </div>
   );
 }
