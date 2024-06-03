@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
 import { ChatBox, Conversation } from "../../components";
@@ -14,17 +14,25 @@ export default function chats() {
   const [sendMessage, setSendMessage] = useState(null);
   const [receiveMessage, setReceiveMessage] = useState(null);
   const socket = useRef();
+  // const dispatch = useDispatch();
 
-  // send message to socket server
+  // Get the chat in chat section
   useEffect(() => {
-    if (sendMessage !== null) {
-      socket.current.emit("send-message", sendMessage);
-    }
-  }, [sendMessage]);
+    const getChats = async () => {
+      try {
+        const { data } = await userChats(currentUser._id);
+        setChats(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getChats();
+  }, [currentUser]);
 
+  // Connect to Socket.io
   useEffect(() => {
     if (currentUser?._id) {
-      socket.current = io("http://localhost:8800");
+      socket.current = io("ws://localhost:8800");
 
       socket.current.emit("new-user-add", currentUser._id);
 
@@ -39,27 +47,25 @@ export default function chats() {
     }
   }, [currentUser]);
 
+  // send message to socket server
+  useEffect(() => {
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
+  }, [sendMessage]);
+
   // receive message from socket server
   useEffect(() => {
     socket.current.on("receive-message", (data) => {
+      console.log("data:" ,data);
       setReceiveMessage(data);
     });
   }, []);
 
-  useEffect(() => {
-    const getChats = async () => {
-      try {
-        const { data } = await userChats(currentUser._id);
-        setChats(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getChats();
-  }, [currentUser]);
-
   const checkOnlineStatus = (chat) => {
-    const chatMember = chat.member.find((member) => member !== currentUser._id);
+    const chatMember = chat.members.find(
+      (member) => member !== currentUser._id
+    );
     const online = onlineUsers.find((user) => user.userId === chatMember);
     return online ? true : false;
   };
@@ -70,8 +76,8 @@ export default function chats() {
       <div className="Left-side-chat ">
         <div className="Chat-container hide-scrollbar bg-white shadow-md sm:w-[200px] w-[100px] h-[590px]">
           <div className="Chat-list">
-            {chats.map((chat) => (
-              <div onClick={() => setCurrentChat(chat)}>
+            {chats.map((chat, index) => (
+              <div key={index} onClick={() => setCurrentChat(chat)}>
                 <Conversation
                   data={chat}
                   currentUserId={currentUser._id}

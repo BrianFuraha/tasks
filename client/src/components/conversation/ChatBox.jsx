@@ -4,19 +4,11 @@ import InputEmoji from "react-input-emoji";
 
 import { addMessage, getMessages, getUser } from "../../api/requests";
 import "./chatBox.css";
-import { text } from "body-parser";
 
-const chatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
+const ChatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const scroll = useRef()
-
-  useEffect(() => {
-    if (receiveMessage!==null && receiveMessage.chatId===chat._id) {
-      setMessages({...messages, receiveMessage})
-    }
-  }, [receiveMessage]);
 
   //fetching data for header
   useEffect(() => {
@@ -59,6 +51,10 @@ const chatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
       chatId: chat._id,
     };
 
+    // send message to socket server
+    const receiverId = chat.members.find((id) => id !== currentUser);
+    setSendMessage({ ...message, receiverId });
+
     // send message to db
     try {
       const { data } = await addMessage(message);
@@ -67,17 +63,53 @@ const chatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
     } catch (error) {
       console.log(error);
     }
-
-    // send message to socket server
-    const receiverId = chat.members.find((id) => id !== currentUser);
-    setSendMessage({...message, receiverId});
   };
 
   //allways scroll to the last message
   useEffect(() => {
-    scroll.current?.scrollIntoView({behavior : "smooth"});
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    console.log("Message Arrived: ", receiveMessage);
+    if (receiveMessage !== null && receiveMessage.chatId === chat._id) {
+      setMessages([...messages, receiveMessage]);
+    }
+  }, [receiveMessage]);
+
+  const scroll = useRef();
+  const imageRef = useRef();
+
+  const ownMessageStyle = {
+    backgroundColor: "#24e4f0",
+    color: "white",
+    padding: "0.7rem",
+    borderRadius: "1rem 1rem 0 1rem",
+    maxWidth: "28rem",
+    width: "fit-content",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+    alignSelf: "flex-end",
+  };
+
+  const otherMessageStyle = {
+    backgroundColor: "#fff9c4",
+    color: "black",
+    padding: "0.7rem",
+    borderRadius: "1rem 1rem 1rem 0",
+    maxWidth: "28rem",
+    width: "fit-content",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+    alignSelf: "flex-start",
+  };
+  const timeStyle = {
+    fontSize: "0.7rem",
+    color: "#888",
+    alignSelf: "end",
+  };
   return (
     <>
       <div className="ChatBox-container shadow-md ">
@@ -100,32 +132,38 @@ const chatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
               </div>
               <hr style={{ width: "85%", border: "0.1px solid #ececec" }} />
             </div>
-
             {/** chatBox messages */}
             <div className="chat-body hide-scrollbar">
               {messages.map((message) => (
-                <>
-                  <div ref={scroll}
-                    className={
-                      message.senderId === currentUser
-                        ? "message own"
-                        : "message"
-                    }
-                  >
-                    <span>{message.text}</span>
-                    <span>{format(message.createdAt)}</span>
-                  </div>
-                </>
+                <div
+                  key={message._id}
+                  ref={scroll}
+                  style={
+                    message.senderId === currentUser
+                      ? ownMessageStyle
+                      : otherMessageStyle
+                  }
+                >
+                  <span>{message.text}</span>
+                  <span style={timeStyle}>{format(message.createdAt)}</span>
+                </div>
               ))}
             </div>
             {/**chat sender */}
             <div className="chat-sender">
-              <div>+</div>
+              <div onClick={() => imageRef.current.click()}>+</div>
               <InputEmoji value={newMessage} onChange={handleChange} />
               <div className="send-button button" onClick={handleSend}>
                 Send
               </div>
-            </div>
+              <input
+                type="file"
+                name=""
+                id=""
+                style={{ display: "none" }}
+                ref={imageRef}
+              />
+            </div>{" "}
           </>
         ) : (
           <span className=" chatbox-empty-message">
@@ -137,4 +175,4 @@ const chatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
   );
 };
 
-export default chatBox;
+export default ChatBox;
