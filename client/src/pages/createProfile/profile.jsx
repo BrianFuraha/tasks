@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function profileCard() {
   const navigate = useNavigate();
@@ -8,7 +8,7 @@ export default function profileCard() {
   const handleClick = () => {
     navigate('/profile');
   };
-  return (
+  return currentUser.userType === 'user' ? (
     <div>
       <h1 className=" text-3xl font-semibold text-center my-7 ">Profile</h1>
       <div className="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden">
@@ -51,5 +51,5 @@ export default function profileCard() {
         </div>
       </div>
     </div>
-  );
+  ) : <Navigate to='/runnerProfile' />;
 }

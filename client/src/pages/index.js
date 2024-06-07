@@ -7,5 +7,6 @@ export { default as Why } from "./Why/Why";
 export { default as Runner } from "./Runner/Runner";
 export { default as Runsign } from "./Runner/Runsign";
 export { default as Profile } from "./createProfile/create.profile";
+export { default as RunnerProfile } from "./createProfile/runner.profile";
 export { default as ProfileCard } from "./createProfile/profile";
 export { default as Messages } from "./messages/chats";

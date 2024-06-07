@@ -45,10 +45,3 @@ export default function RootLayout1() {
     </div>
   ) : <Navigate to='/signin'/>;
 }
-{
-  /* <div className="relative sm:-8 p-4 min-h-screen flex-row">
-      
-
-      
-    </div> */
-}

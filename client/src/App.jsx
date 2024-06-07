@@ -19,6 +19,7 @@ import {
   Messages,
   Runsign,
   ProfileCard,
+  RunnerProfile,
 } from "./pages";
 
 const routes = (
@@ -34,6 +35,7 @@ const routes = (
       <Route path="/runners" element={<Runner />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/myProfile" element={<ProfileCard />} />
+      <Route path="/runnerProfile" element={<RunnerProfile />} />
     </Route>
     <Route element={<RootLayout2 />}>
       <Route path="/signin" element={<SignIn />} />

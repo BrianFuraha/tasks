@@ -24,7 +24,6 @@ module.exports = withMT({
         yellow: "#f5c32c",
         orange: "#fca61f",
         black: "#242d49",
-        gray: "rgba(36, 45, 73, 0.65)",
         profileShadow: "rgba(0, 0, 0, 0.25)",
         hrColor: "#cfcdcd",
         cardColor: "rgba(255, 255, 255, 0.64)",
