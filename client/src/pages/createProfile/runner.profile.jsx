@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Comments, MyWorks } from "../../components";
+import { getUser } from "../../api/requests";
+import { useParams } from "react-router-dom";
 
 export default function RunnerProfile() {
+  const { userId } = useParams();
   const { currentUser, loading, error } = useSelector((state) => state.user);
+  const [userData, setUserData] = useState(null);
 
-  const handleClick = () => {
-    
-  }
-  const handleSelect = () => {
-    
-  }
-  
-  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await getUser(userId);
+        setUserData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+  }, [userId]);
+  const handleClick = () => {};
+  const handleSelect = () => {};
+
   return (
     <div className=" bg-gray-100">
       <div className=" container mx-auto py-8">
@@ -45,8 +56,9 @@ export default function RunnerProfile() {
                     </button>
                   )}
                 </div>
-                <hr className="my-6 border-t border-black" />
+
                 <div className=" flex flex-col">
+                  <hr className="my-6 border-t border-b-gray-600" />
                   <span className=" text-gray-700 uppercase font-bold tracking-wider mb-2">
                     Information
                   </span>
@@ -59,6 +71,32 @@ export default function RunnerProfile() {
                     <li className=" mb-2">Ratings: {currentUser.ratings}</li>
                   </ul>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div className=" col-span-4 sm:col-span-9">
+            <div className=" bg-white shadow rounded-lg p-6">
+              <h2 className="text-xl font-bold mb-4">About Me:</h2>
+              <p className="text-gray-700">{currentUser.about}</p>
+              <hr className="my-6 border-t border-b-gray-600" />
+
+              <h2 className=" text-xl font-bold mt 6 mb-4">My works</h2>
+              <div className=" mb-6 flex gap-10">
+                {/* {images.map((_ , index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Image ${index + 1}`}
+                    style={{ width: "150px", height: "150px" }}
+                  />
+                ))} */}
+              </div>
+
+              <h2 className=" text-xl font-bold mt 6 mb-4">Comments: </h2>
+              <div>
+                <Comments
+                data={userData}
+                />
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUser, getAllRunners, getRunners, getUser, rateRunner, updateUser } from "../controllers/user.controller.js";
+import { comment, deleteUser, getAllRunners, getRunners, getUser, rateRunner, updateUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../utils/verfy.user.js";
 
 const router = express.Router();
@@ -10,5 +10,5 @@ router.get("/", getAllRunners);
 router.put("/updateUser/:id", verifyToken, updateUser);
 router.delete("/delete/:id", verifyToken, deleteUser);
 router.put("/:id/rate", rateRunner);
-
+router.put("/:id/comment", comment);
 export default router;

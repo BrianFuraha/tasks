@@ -6,3 +6,5 @@ export { default as Sidebar } from "./Sidebar/Sidebar";
 export { default as CustomButton } from "./CustomButton/CustomButton";
 export { default as Conversation } from "./conversation/Conversation";
 export { default as ChatBox } from "./conversation/ChatBox";
+export { default as MyWorks } from "./myworks/MyWorks";
+export {default as Comments} from './comments/comments'

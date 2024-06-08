@@ -51,5 +51,5 @@ export default function profileCard() {
         </div>
       </div>
     </div>
-  ) : <Navigate to='/runnerProfile' />;
+  ) : <Navigate to={`/runnerProfile/${currentUser._id}`} />;
 }

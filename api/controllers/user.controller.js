@@ -132,7 +132,7 @@ export const deleteUser = async (req, res, next) => {
 export const rateRunner = async (req, res, next) => {
   const id = req.params.id;
 
-  const { currentUserId, currentUserIsAdmin, userType, userComment, userRate } =
+  const { currentUserId, currentUserIsAdmin, userType, userComment, image } =
     req.body;
 
   if (currentUserId === id || userType == "runner" || currentUserIsAdmin) {
@@ -151,8 +151,8 @@ export const rateRunner = async (req, res, next) => {
       }
       user.comments.push({
         userId: currentUserId,
-        rate: userRate,
         comment: userComment,
+
       });
 
       let totalRates = 0;
@@ -174,3 +174,37 @@ export const rateRunner = async (req, res, next) => {
     }
   }
 };
+
+export const comment = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const user = await UserModel.User.findById(id).populate("comments");
+
+    if (!user) {
+      return res.status(404).json({ message: "Runner not found!" });
+    }
+
+    user.comments.push({
+      userId: req.body.userId,
+      comment: req.body.comment,
+      image: req.body.image,
+      rate: req.body.rate,
+    });
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Comment added successfully!", user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getComment = (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    next(error);
+  }
+}
