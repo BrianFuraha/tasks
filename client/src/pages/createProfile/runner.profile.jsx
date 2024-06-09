@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Comments, MyWorks } from "../../components";
 import { getUser } from "../../api/requests";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Fbutton } from "../../container";
 
 export default function RunnerProfile() {
   const { userId } = useParams();
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -20,8 +22,13 @@ export default function RunnerProfile() {
     };
     fetchUser();
   }, [userId]);
-  const handleClick = () => {};
+  const handleClick = () => {
+    navigate("/profile");
+  };
   const handleSelect = () => {};
+  const handleButtonClick = () => {
+    alert("Button clicked!");
+  };
 
   return (
     <div className=" bg-gray-100">
@@ -93,12 +100,15 @@ export default function RunnerProfile() {
               </div>
 
               <h2 className=" text-xl font-bold mt 6 mb-4">Comments: </h2>
-              <div>
-                <Comments
-                data={userData}
-                />
+              <div className=" max-h-64 overflow-y-auto hide-scrollbar">
+                <Comments data={userData} />
               </div>
             </div>
+            {currentUser == "user" ? (
+              <Fbutton label="Comment & rate" onClick={handleButtonClick} />
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

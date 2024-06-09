@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react";
+import Comment from "./comment";
 
 export default function comments({ data }) {
   const [comments, setComments] = useState([]);
@@ -8,15 +9,15 @@ export default function comments({ data }) {
       setComments(data.comments);
     }
   }, [data]);
-
   return (
     <div>
       {comments.map((commentObj) => (
         <div key={commentObj._id}>
-          <p>User ID: {commentObj.userId}</p>
-          <p>Comment: {commentObj.comment}</p>
-          {/* Render other properties here */}
-          <p>Created At: {commentObj.createdAt}</p>
+          <Comment
+            userId={commentObj.userId}
+            comment={commentObj.comment}
+            date={commentObj.createdAt}
+          />
         </div>
       ))}
     </div>
