@@ -10,3 +10,4 @@ export { default as Profile } from "./createProfile/create.profile";
 export { default as RunnerProfile } from "./createProfile/runner.profile";
 export { default as ProfileCard } from "./createProfile/profile";
 export { default as Messages } from "./messages/chats";
+export { default as Auction } from './Home/Auction'

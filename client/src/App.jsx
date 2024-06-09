@@ -20,6 +20,7 @@ import {
   Runsign,
   ProfileCard,
   RunnerProfile,
+  Auction,
 } from "./pages";
 
 const routes = (
@@ -31,6 +32,7 @@ const routes = (
     </Route>
     <Route element={<RootLayout1 />}>
       <Route path="/hero" element={<Land />} />
+      <Route path="/auctions" element={<Auction />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/runners" element={<Runner />} />
       <Route path="/profile" element={<Profile />} />
