@@ -29,6 +29,9 @@ export default function RunnerProfile() {
   const handleButtonClick = () => {
     alert("Button clicked!");
   };
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className=" bg-gray-100">
@@ -38,14 +41,12 @@ export default function RunnerProfile() {
             <div className=" bg-white shadow rounded-lg p-6">
               <div className=" flex flex-col items-center">
                 <img
-                  src={currentUser.avatar}
+                  src={userData.avatar}
                   alt="profilePic"
                   className=" w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0"
                 />
-                <h1 className=" text-xl font-bold">{currentUser.username}</h1>
-                <p className=" text-gray-700 uppercase">
-                  {currentUser.userType}
-                </p>
+                <h1 className=" text-xl font-bold">{userData.username}</h1>
+                <p className=" text-gray-700 uppercase">{userData.userType}</p>
                 <div className=" mt-6 justify-center">
                   {currentUser.userType === "runner" ? (
                     <button
@@ -70,12 +71,10 @@ export default function RunnerProfile() {
                     Information
                   </span>
                   <ul>
-                    <li className=" mb-2">Email: {currentUser.email}</li>
-                    <li className=" mb-2">Location: {currentUser.location}</li>
-                    <li className=" mb-2">
-                      Categories: {currentUser.category}
-                    </li>
-                    <li className=" mb-2">Ratings: {currentUser.ratings}</li>
+                    <li className=" mb-2">Email: {userData.email}</li>
+                    <li className=" mb-2">Location: {userData.location}</li>
+                    <li className=" mb-2">Categories: {userData.category}</li>
+                    <li className=" mb-2">Ratings: {userData.ratings}</li>
                   </ul>
                 </div>
               </div>
@@ -84,7 +83,7 @@ export default function RunnerProfile() {
           <div className=" col-span-4 sm:col-span-9">
             <div className=" bg-white shadow rounded-lg p-6">
               <h2 className="text-xl font-bold mb-4">About Me:</h2>
-              <p className="text-gray-700">{currentUser.about}</p>
+              <p className="text-gray-700">{userData.about}</p>
               <hr className="my-6 border-t border-b-gray-600" />
 
               <h2 className=" text-xl font-bold mt 6 mb-4">My works</h2>

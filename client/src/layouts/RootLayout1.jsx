@@ -5,7 +5,7 @@ import { Navbar, Sidebar } from "../components";
 export default function RootLayout1() {
   const { currentUser } = useSelector((state) => state.user);
   return currentUser ? (
-    <div className="bg-white">
+    <div className="bg-white hide-scrollbar">
       <div className="relative isolate px-6 pt-14 lg:px-8 ">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -43,5 +43,7 @@ export default function RootLayout1() {
         </div>
       </div>
     </div>
-  ) : <Navigate to='/signin'/>;
+  ) : (
+    <Navigate to="/signin" />
+  );
 }

@@ -1,6 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function card({ data }) {
+  const navigate = useNavigate();
+  const handleClick = (id) => {
+    // Implement the logic you want to execute on click
+    console.log("Runner clicked:", id);
+    // For example, navigate to a details page
+    navigate(`/runnerProfile/${id}`);
+  };
+  const handleChat = (id) => {};
   return (
     <div className=" max-w-sm mx-auto bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl shadow-green-500/40 hover:shadow-green-500">
       <div className=" border-b px-4 pb-6">
@@ -32,10 +41,16 @@ export default function card({ data }) {
           </div>
         </div>
         <div className="flex gap-2 px-2">
-          <button className="flex-1 rounded-full bg-blue-600 dark:bg-blue-800 text-white dark:text-white antialiased font-bold hover:bg-blue-800 dark:hover:bg-blue-900 px-4 py-2">
-            Follow
+          <button
+            onClick={() => handleClick(data._id)}
+            className="flex-1 rounded-full bg-blue-600 dark:bg-blue-800 text-white dark:text-white antialiased font-bold hover:bg-blue-800 dark:hover:bg-blue-900 px-4 py-2"
+          >
+            Profile
           </button>
-          <button className="flex-1 rounded-full border-2 border-gray-400 dark:border-gray-700 font-semibold text-black dark:text-white px-4 py-2">
+          <button
+            className="flex-1 rounded-full border-2 border-gray-400 dark:border-gray-700 font-semibold text-black dark:text-white px-4 py-2"
+            onClick={() => handleChat(data._id)}
+          >
             Message
           </button>
         </div>

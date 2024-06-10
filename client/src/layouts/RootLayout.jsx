@@ -4,7 +4,7 @@ import { Footer, Navbar, Nav } from "../components";
 
 export default function RootLayout() {
   return (
-    <div>
+    <div className=" hide-scrollbar">
       <Nav />
       <Outlet />
       <Footer />

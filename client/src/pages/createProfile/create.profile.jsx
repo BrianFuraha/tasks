@@ -187,8 +187,8 @@ export default function Profile() {
                 <p>
                   {fileUploadError ? (
                     <span className=" text-red-700">
-                      Image Upload Error: Size too large (2mb max) or wrong file
-                      format
+                      Image Upload Error: Size too large (10mb max) or wrong
+                      file format
                     </span>
                   ) : filePer > 0 && filePer < 100 ? (
                     <span className=" text-gray-800">{`Uploading ${filePer}%`}</span>
@@ -230,7 +230,30 @@ export default function Profile() {
                       placeholder="Write a few sentences about yourself."
                     />
                   </div>
-                  
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              {currentUser.userType == "runner" ? (
+                <div className="col-span-full">
+                  <label
+                    htmlFor="images"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    My works:
+                  </label>
+                  <div className="mt-2">
+                    <textarea
+                      id="image"
+                      name="image"
+                      onChange={handleChange}
+                      rows={3}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      placeholder="Write a few sentences about yourself."
+                    />
+                  </div>
                 </div>
               ) : (
                 ""

@@ -1,5 +1,19 @@
 import mongoose from "mongoose";
 
+const imageSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  image: {
+    type: String,
+  },
+});
+
 const commentSchema = new mongoose.Schema({
   userId: {
     type: String,
@@ -15,7 +29,7 @@ const commentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  image: [],
+  images: [imageSchema],
 });
 
 const userSchema = new mongoose.Schema(
@@ -37,7 +51,10 @@ const userSchema = new mongoose.Schema(
     about: { type: String },
     ratings: { type: Number, default: 0 },
     comments: [commentSchema],
-    category: [],
+    category: {
+      type: [String],
+    },
+    images: [imageSchema],
     userType: {
       type: String,
       default: "user",
