@@ -4,4 +4,5 @@ export { default as Review } from "./review";
 export { default as Stats } from "./stats";
 export { default as Testimonials } from "./testimonials";
 export { default as Fbutton } from "./button1";
-export { default as Card} from "./card";
+export { default as Card } from "./card";
+export { default as FileUploader } from "./fileUploader";

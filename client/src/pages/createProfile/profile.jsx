@@ -8,48 +8,41 @@ export default function profileCard() {
   const handleClick = () => {
     navigate('/profile');
   };
-  return currentUser.userType === 'user' ? (
-    <div>
-      <h1 className=" text-3xl font-semibold text-center my-7 ">Profile</h1>
-      <div className="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-        <div className=" flex flex-col ">
+  return currentUser.userType === "user" ? (
+    <div className=" w-full h-full flex justify-center items-center">
+      <div className=" w-[20rem] mx-auto flex flex-col gap-2 px-4 shadow-lg border border-gray-300 rounded-lg bg-white dark:bg-gray-900 hover:shadow-2xl shadow-green-500/40 hover:shadow-green-500">
+        <div className=" w-full flex justify-center items-center">
           <img
+            className=" w-[8rem] h-[8rem] rounded-full outline-offset-2 outline-1 outline-dashed outline-blue-400 shadow-lg relative -top-[4rem] "
             src={currentUser.avatar}
-            alt="profile"
-            className=" rounded-full h-24 w-24 object-cover self-center mt-2 "
+            alt="profile image"
           />
         </div>
-        <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2">User Information</div>
-          {currentUser.userType == "runner" ? (
-            <div className="text-gray-700 text-base">
-              <p>Name: {currentUser.username}</p>
-              <p>Email: {currentUser.email}</p>
-              <p>Location: {currentUser.location}</p>
-              <p>About me: {currentUser.about}</p>
-              <p>Categories: {currentUser.category}</p>
-              <p>User Type: {currentUser.userType}</p>
-              <p>Ratings: {currentUser.ratings}</p>
-              <p>Comments: {currentUser.comments}</p>
-            </div>
-          ) : (
-            <div className="text-gray-700 text-base">
-              <p>Name: {currentUser.username}</p>
-              <p>Email: {currentUser.email}</p>
-              <p>Location: {currentUser.location}</p>
-              <p>User Type: {currentUser.userType}</p>
-            </div>
-          )}
-        </div>
-        <div className="px-6 py-4">
+
+        <div className=" w-full h-full text-center flex flex-col gap-4 relative -top-10">
+          <h1 className=" uppercase text-lg font-semibold dark:text-white">
+            {currentUser.userType}
+          </h1>
+
+          <h2 className=" text-xl font-serif capitalize text-gray-700 dark:text-gray-300">
+            Name: {currentUser.username}
+          </h2>
+          <h2 className=" text-xl font-serif capitalize text-gray-700 dark:text-gray-300">
+            Email: {currentUser.email}
+          </h2>
+          <h2 className=" text-xl font-serif capitalize text-gray-700 dark:text-gray-300">
+            Location: {currentUser.location}
+          </h2>
           <button
             onClick={handleClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className=" w-[60%] mx-auto rounded-3xl bg-blue-500 hover:bg-blue-700 text-white py-2 px-4"
           >
             Edit Profile
           </button>
         </div>
       </div>
     </div>
-  ) : <Navigate to={`/runnerProfile/${currentUser._id}`} />;
+  ) : (
+    <Navigate to={`/runnerProfile/${currentUser._id}`} />
+  );
 }

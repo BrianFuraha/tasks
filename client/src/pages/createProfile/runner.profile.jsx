@@ -3,13 +3,26 @@ import { useSelector } from "react-redux";
 import { Comments, MyWorks } from "../../components";
 import { getUser } from "../../api/requests";
 import { useNavigate, useParams } from "react-router-dom";
-import { Fbutton } from "../../container";
+import { Fbutton, FileUploader } from "../../container";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  Input,
+  Typography,
+} from "@material-tailwind/react";
 
 export default function RunnerProfile() {
   const { userId } = useParams();
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -26,9 +39,7 @@ export default function RunnerProfile() {
     navigate("/profile");
   };
   const handleSelect = () => {};
-  const handleButtonClick = () => {
-    alert("Button clicked!");
-  };
+  const handleButtonClick = () => setOpen(!open);
   if (!userData) {
     return <div>Loading...</div>;
   }
@@ -102,12 +113,49 @@ export default function RunnerProfile() {
               <div className=" max-h-64 overflow-y-auto hide-scrollbar">
                 <Comments data={userData} />
               </div>
+              {currentUser.userType === "user" ? (
+                <>
+                  <Fbutton label="Comment & rate" onClick={handleButtonClick} />
+                  <Dialog
+                    size="xs"
+                    open={open}
+                    handler={handleButtonClick}
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0.9, y: -100 },
+                    }}
+                    className=" bg-transparent shadow-none"
+                  >
+                    <Card className=" mx-auto w-full max-w-[28rem]">
+                      <CardBody className=" flex flex-col gap-4">
+                        <Typography variant="h4" color="blue-gray">
+                          Comment & rate the runner
+                        </Typography>
+                        <Typography className="-mb-2" variant="h6">
+                          Rate runner
+                        </Typography>
+                        {/* something to rate runner here */}
+                        <Typography className="-mb-2" variant="h6">
+                          Comment
+                        </Typography>
+                        <Input label="comment" size="lg" />
+                        <Typography className="-mb-2" variant="h6">
+                          File (optional)
+                        </Typography>
+                        <FileUploader />
+                      </CardBody>
+                      <CardFooter className=" pt-0">
+                        <Button variant="gradient" onClick={handleButtonClick} fullWidth>
+                          Post
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </Dialog>
+                </>
+              ) : (
+                ""
+              )}
             </div>
-            {currentUser == "user" ? (
-              <Fbutton label="Comment & rate" onClick={handleButtonClick} />
-            ) : (
-              ""
-            )}
           </div>
         </div>
       </div>
