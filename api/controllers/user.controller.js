@@ -104,6 +104,10 @@ export const updateUser = async (req, res, next) => {
           location: req.body.location,
           about: req.body.about,
           category: req.body.category,
+          images: req.body.images.map((image) => ({
+        userId: req.params.id,
+        image: image.url,
+      })),
         },
       },
       { new: true }

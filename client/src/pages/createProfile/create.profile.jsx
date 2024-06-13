@@ -18,6 +18,7 @@ import {
   deleteUserFailure,
   deleteUserSuccess,
 } from "../../redux/user/userSlice";
+import { FileUploader } from "../../container";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -26,12 +27,12 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [filePer, setFilePer] = useState(0);
-  const [formData, setFormData] = useState({ username: currentUser.userName });
+  const [formData, setFormData] = useState({ username: currentUser.userName, images: [] });
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [specialCharacterError, setSpecialCharacterError] = useState(false);
-  const [showAlert, setShowAlert] = useState(true);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     if (file) {
@@ -87,6 +88,10 @@ export default function Profile() {
       const username = formData.firstname + " " + formData.lastname;
       setFormData({ ...formData, username });
     }
+
+    if (images)
+      setFormData({ ...formData, images });
+    
     // Proceed with fetch if all validations pass
     try {
       dispatch(updateUserStart());
@@ -187,7 +192,8 @@ export default function Profile() {
                 <p>
                   {fileUploadError ? (
                     <span className=" text-red-700">
-                      Image Upload Error: Size too large (10mb max) or wrong file format
+                      Image Upload Error: Size too large (10mb max) or wrong
+                      file format
                     </span>
                   ) : filePer > 0 && filePer < 100 ? (
                     <span className=" text-gray-800">{`Uploading ${filePer}%`}</span>
@@ -244,14 +250,7 @@ export default function Profile() {
                     My works:
                   </label>
                   <div className="mt-2">
-                    <textarea
-                      id="image"
-                      name="image"
-                      onChange={handleChange}
-                      rows={3}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      placeholder="Write a few sentences about yourself."
-                    />
+                    <FileUploader setImages={setImages} images={images} />
                   </div>
                 </div>
               ) : (

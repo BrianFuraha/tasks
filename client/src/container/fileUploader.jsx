@@ -5,13 +5,12 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { TEAlert } from "tw-elements-react";
+import { TEAlert, TETooltip } from "tw-elements-react";
 import { app } from "../firebase";
 
 export default function FileUploader({ setImages, images }) {
   const fileInputRef = useRef(null);
   const [fileUploadError, setFileUploadError] = useState(false);
-  const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
   const [filePer, setFilePer] = useState(0);
 
   const handleFileChange = (event) => {
@@ -50,7 +49,6 @@ export default function FileUploader({ setImages, images }) {
                   : file.size + "b",
             };
             setImages((prevImages) => [...prevImages, newImage]);
-            setFileUploadSuccess(true);
           });
         }
       );

@@ -34,7 +34,7 @@ export const signin = async (req, res, next) => {
     if (!validPassword) return next(errorHandler(401, "Wrong credentials!!!"));
 
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "24h",
     });
     const { password: pass, ...rest } = validUser._doc;
     res
@@ -51,7 +51,7 @@ export const google = async (req, res, next) => {
     const user = await UserModel.User.findOne({ email: req.body.email });
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "24h",
       });
       const { password: pass, ...rest } = user._doc;
       res

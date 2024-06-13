@@ -23,6 +23,7 @@ export default function RunnerProfile() {
   const [images, setImages] = useState([]);
   const [newComment, setNewComment] = useState("");
 
+  console.log(currentUser)
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -122,7 +123,9 @@ export default function RunnerProfile() {
               <hr className="my-6 border-t border-b-gray-600" />
               <h2 className="text-xl font-bold mt-6 mb-4">My works</h2>
               <div className="mb-6 flex gap-10">
-                {/* Render images if any */}
+                {currentUser.images.map((img) => ( <div key={img._id} className=" relative w-32 h-32 object-cover rouded">
+                  <img src={img.image} alt="images" className=" w-32 h-32 object-cover rounded"/>
+                </div>))}
               </div>
               <h2 className="text-xl font-bold mt-6 mb-4">Comments:</h2>
               <div className="max-h-64 overflow-y-auto hide-scrollbar">
@@ -166,6 +169,7 @@ export default function RunnerProfile() {
                           File (optional)
                         </Typography>
                         <FileUploader setImages={setImages} images={images} />
+                        <p>Wait till the images load befor posting</p>
                       </CardBody>
                       <CardFooter className="pt-0">
                         <Button
