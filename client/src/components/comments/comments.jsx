@@ -17,7 +17,9 @@ export default function comments({ data }) {
             userId={commentObj.userId}
             comment={commentObj.comment}
             date={commentObj.createdAt}
+            images={commentObj.images}
           />
+          {/* {console.log(commentObj)} */}
         </div>
       ))}
     </div>

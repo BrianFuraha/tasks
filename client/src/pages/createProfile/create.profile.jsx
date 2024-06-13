@@ -187,8 +187,7 @@ export default function Profile() {
                 <p>
                   {fileUploadError ? (
                     <span className=" text-red-700">
-                      Image Upload Error: Size too large (10mb max) or wrong
-                      file format
+                      Image Upload Error: Size too large (10mb max) or wrong file format
                     </span>
                   ) : filePer > 0 && filePer < 100 ? (
                     <span className=" text-gray-800">{`Uploading ${filePer}%`}</span>

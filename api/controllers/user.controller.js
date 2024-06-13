@@ -152,7 +152,6 @@ export const rateRunner = async (req, res, next) => {
       user.comments.push({
         userId: currentUserId,
         comment: userComment,
-
       });
 
       let totalRates = 0;
@@ -184,12 +183,17 @@ export const comment = async (req, res, next) => {
       return res.status(404).json({ message: "Runner not found!" });
     }
 
-    user.comments.push({
+    const newComment = {
       userId: req.body.userId,
       comment: req.body.comment,
-      image: req.body.image,
       rate: req.body.rate,
-    });
+      images: req.body.images.map((image) => ({
+        userId: req.body.userId,
+        image: image.url,
+      })),
+    };
+
+    user.comments.push(newComment);
 
     await user.save();
 
@@ -203,8 +207,7 @@ export const comment = async (req, res, next) => {
 
 export const getComment = (req, res, next) => {
   try {
-    
   } catch (error) {
     next(error);
   }
-}
+};
