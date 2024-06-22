@@ -13,6 +13,7 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
+import ReactStars from "react-rating-stars-component";
 
 export default function RunnerProfile() {
   const { userId } = useParams();
@@ -22,8 +23,9 @@ export default function RunnerProfile() {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [rate, setRate] = useState(null);
 
-  console.log(currentUser)
+  console.log(currentUser);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -53,7 +55,7 @@ export default function RunnerProfile() {
       userId: currentUser._id,
       comment: newComment,
       images: images,
-      // rate: rate, // Uncomment and implement if you have rate functionality
+      rate: rate, // Uncomment and implement if you have rate functionality
     };
 
     try {
@@ -64,6 +66,10 @@ export default function RunnerProfile() {
       console.error("Error adding comment:", error);
     }
     console.log(images.url);
+  };
+
+  const ratingChanged = (newRating) => {
+    setRate(newRating);
   };
 
   if (!userData) {
@@ -110,7 +116,21 @@ export default function RunnerProfile() {
                     <li className="mb-2">Email: {userData.email}</li>
                     <li className="mb-2">Location: {userData.location}</li>
                     <li className="mb-2">Categories: {userData.category}</li>
-                    <li className="mb-2">Ratings: {userData.ratings}</li>
+                    <li className="mb-2">
+                      Rating:{" "}
+                      <ReactStars
+                        classNames=""
+                        count={5}
+                        value={3}
+                        // value={userData.ratings}
+                        size={24}
+                        isHalf={true}
+                        emptyIcon={<i className="far fa-star"></i>}
+                        halfIcon={<i className="fa fa-star-half-alt"></i>}
+                        fullIcon={<i className="fa fa-star"></i>}
+                        // activeColor="#ffd700"
+                      />
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -122,10 +142,22 @@ export default function RunnerProfile() {
               <p className="text-gray-700">{userData.about}</p>
               <hr className="my-6 border-t border-b-gray-600" />
               <h2 className="text-xl font-bold mt-6 mb-4">My works</h2>
+              <div>
+                <MyWorks />
+              </div>
               <div className="mb-6 flex gap-10">
-                {currentUser.images.map((img) => ( <div key={img._id} className=" relative w-32 h-32 object-cover rouded">
-                  <img src={img.image} alt="images" className=" w-32 h-32 object-cover rounded"/>
-                </div>))}
+                {currentUser.images.map((img) => (
+                  <div
+                    key={img._id}
+                    className=" relative w-32 h-32 object-cover rouded"
+                  >
+                    <img
+                      src={img.image}
+                      alt="images"
+                      className=" w-32 h-32 object-cover rounded"
+                    />
+                  </div>
+                ))}
               </div>
               <h2 className="text-xl font-bold mt-6 mb-4">Comments:</h2>
               <div className="max-h-64 overflow-y-auto hide-scrollbar">
@@ -155,7 +187,16 @@ export default function RunnerProfile() {
                         <Typography className="-mb-2" variant="h6">
                           Rate runner
                         </Typography>
-                        {/* Add rating component here if any */}
+                        <ReactStars
+                          count={5}
+                          onChange={ratingChanged}
+                          size={24}
+                          isHalf={true}
+                          emptyIcon={<i className="far fa-star"></i>}
+                          halfIcon={<i className="fa fa-star-half-alt"></i>}
+                          fullIcon={<i className="fa fa-star"></i>}
+                          activeColor="#ffd700"
+                        />
                         <Typography className="-mb-2" variant="h6">
                           Comment
                         </Typography>
