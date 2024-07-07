@@ -29,7 +29,8 @@ export default function Land() {
 
   return currentUser.userType == "user" ? (
     <div>
-      <h1>Dashboard</h1>
+      <h1>All Runners</h1>
+      <h1>Runners near me</h1>
       <div className="flex flex-wrap -m-2">
         {runners.map((runner, index) => (
           <div

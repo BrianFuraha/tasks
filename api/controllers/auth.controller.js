@@ -36,6 +36,26 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
       expiresIn: "24h",
     });
+
+    if (validUser.userType === "runner") {
+      // Calculate the average rate of comments
+      const commentsWithRate = validUser.comments.filter(
+        (comment) => comment.rate !== undefined
+      );
+      const totalRate = commentsWithRate.reduce(
+        (sum, comment) => sum + comment.rate,
+        0
+      );
+      const averageRate =
+        commentsWithRate.length > 0 ? totalRate / commentsWithRate.length : 0;
+
+      // Round the average rate to the nearest 0.5
+      validUser.ratings = roundToNearestHalf(averageRate);
+
+      // Save the user document with the updated ratings
+      await validUser.save();
+    }
+
     const { password: pass, ...rest } = validUser._doc;
     res
       .cookie("access_token", token, { httpOnly: true })
