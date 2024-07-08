@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 export default function card({ data }) {
   const navigate = useNavigate();
   const handleClick = (id) => {
-    // Implement the logic you want to execute on click
-    console.log("Runner clicked:", id);
-    // For example, navigate to a details page
-    navigate(`/runnerProfile/${id}`);
+    navigate("/runnerProfile", { state: { userId: id } });
   };
-  const handleChat = (id) => {};
+  const handleChat = (id) => {
+    navigate("/messages", { state: { userId: id } });
+  };
   return (
     <div className=" max-w-sm mx-auto bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl shadow-green-500/40 hover:shadow-green-500">
       <div className=" border-b px-4 pb-6">

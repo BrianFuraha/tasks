@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Comments, MyWorks } from "../../components";
 import { comment, getUser } from "../../api/requests";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Fbutton, FileUploader } from "../../container";
 import {
   Button,
@@ -16,7 +16,7 @@ import {
 import ReactStars from "react-rating-stars-component";
 
 export default function RunnerProfile() {
-  const { userId } = useParams();
+  // const { userId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -24,8 +24,9 @@ export default function RunnerProfile() {
   const [images, setImages] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [rate, setRate] = useState(null);
+  const location = useLocation();
+  const { userId } = location.state;
 
-  console.log(currentUser);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -65,7 +66,6 @@ export default function RunnerProfile() {
     } catch (error) {
       console.error("Error adding comment:", error);
     }
-    console.log(images.url);
   };
 
   const ratingChanged = (newRating) => {

@@ -4,9 +4,11 @@ import { io } from "socket.io-client";
 
 import { ChatBox, Conversation } from "../../components";
 import "./chat.css";
-import { userChats } from "../../api/requests";
+import { newChat, userChats } from "../../api/requests";
+import { useLocation } from "react-router-dom";
 
-export default function chats() {
+export default function Chats() {
+  const dispatch = useDispatch();
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -14,19 +16,22 @@ export default function chats() {
   const [sendMessage, setSendMessage] = useState(null);
   const [receiveMessage, setReceiveMessage] = useState(null);
   const socket = useRef();
-  // const dispatch = useDispatch();
+  const location = useLocation();
+  const { userId } = location.state || {};
+  const [userChat, setUserChat] = useState(null);
 
-  // Get the chat in chat section
+  // Fetch user chats
   useEffect(() => {
-    const getChats = async () => {
+    const fetchChats = async () => {
       try {
         const { data } = await userChats(currentUser._id);
         setChats(data);
+        console.log(data)
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching user chats:", error);
       }
     };
-    getChats();
+    fetchChats();
   }, [currentUser]);
 
   // Connect to Socket.io
@@ -47,21 +52,22 @@ export default function chats() {
     }
   }, [currentUser]);
 
-  // send message to socket server
+  // Send message to socket server
   useEffect(() => {
     if (sendMessage !== null) {
       socket.current.emit("send-message", sendMessage);
     }
   }, [sendMessage]);
 
-  // receive message from socket server
+  // Receive message from socket server
   useEffect(() => {
     socket.current.on("receive-message", (data) => {
-      console.log("data:" ,data);
+      console.log("Received message:", data);
       setReceiveMessage(data);
     });
   }, []);
 
+  // Check online status of chat members
   const checkOnlineStatus = (chat) => {
     const chatMember = chat.members.find(
       (member) => member !== currentUser._id
@@ -70,14 +76,65 @@ export default function chats() {
     return online ? true : false;
   };
 
+  // Function to find user chat based on userId
+  const findUserChat = (chats, userId) => {
+    for (let chat of chats) {
+      if (chat.members.includes(userId)) {
+        return chat;
+      }
+    }
+    return null;
+  };
+
+  // Find or create user chat
+  useEffect(() => {
+    const findOrCreateChat = async () => {
+      const chat = findUserChat(chats, userId);
+      if (chat !== null) {
+        setUserChat(chat); // Set existing chat if found
+      } else {
+        try {
+          const createChat = {
+            senderId: currentUser._id,
+            receiverId: userId,
+          };
+          const newChatData = await newChat(createChat); // Create new chat
+          setUserChat(newChatData);
+
+          // Update the local state with the new list of chats
+          const { data } = await userChats(currentUser._id);
+          setChats(data); // Update chats state with new list of chats
+        } catch (error) {
+          console.error("Error creating new chat:", error);
+        }
+      }
+    };
+
+    // Call findOrCreateChat only when necessary (e.g., userId or chats change)
+    if (userId && chats.length > 0) {
+      findOrCreateChat();
+    }
+  }, [chats, userId, currentUser._id]);
+ // Ensure all necessary dependencies are included
+
+  // Handle click on conversation to set current chat
+  const handleConversationClick = (chat) => {
+    console.log("Conversation clicked");
+    setCurrentChat(chat);
+    setUserChat(chat);
+  };
+
+  // Determine which chat to display
+  const chatToDisplay = userChat || currentChat;
+
   return (
     <div className="Chat">
-      {/*left side */}
-      <div className="Left-side-chat ">
+      {/* Left side */}
+      <div className="Left-side-chat">
         <div className="Chat-container hide-scrollbar bg-white shadow-md sm:w-[200px] w-[100px] h-[590px]">
-          <div className="Chat-list">
+          <div className="Chat-list hide-scrollbar">
             {chats.map((chat, index) => (
-              <div key={index} onClick={() => setCurrentChat(chat)}>
+              <div key={index} onClick={() => handleConversationClick(chat)}>
                 <Conversation
                   data={chat}
                   currentUserId={currentUser._id}
@@ -89,10 +146,10 @@ export default function chats() {
         </div>
       </div>
 
-      {/*right side */}
-      <div className=" sm:ml-1 ml-7 Right-side-chat">
+      {/* Right side */}
+      <div className="sm:ml-1 ml-7 Right-side-chat">
         <ChatBox
-          chat={currentChat}
+          chat={chatToDisplay}
           currentUser={currentUser._id}
           setSendMessage={setSendMessage}
           receiveMessage={receiveMessage}

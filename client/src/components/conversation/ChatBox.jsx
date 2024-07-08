@@ -49,7 +49,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receiveMessage }) => {
       senderId: currentUser,
       text: newMessage,
       chatId: chat._id,
-    };
+    }; 
 
     // send message to socket server
     const receiverId = chat.members.find((id) => id !== currentUser);
