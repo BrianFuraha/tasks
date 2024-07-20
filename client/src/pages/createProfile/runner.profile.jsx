@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Comments, MyWorks } from "../../components";
 import { comment, getUser } from "../../api/requests";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Fbutton, FileUploader } from "../../container";
 import {
   Button,
@@ -16,7 +16,6 @@ import {
 import ReactStars from "react-rating-stars-component";
 
 export default function RunnerProfile() {
-  // const { userId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -25,19 +24,23 @@ export default function RunnerProfile() {
   const [newComment, setNewComment] = useState("");
   const [rate, setRate] = useState(null);
   const location = useLocation();
-  const { userId } = location.state;
+  const { userId } = location.state || {};
+  const [rId, setRId] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
+      if (currentUser.userType == "runner") {
+        setRId(currentUser._id);
+      }
       try {
-        const { data } = await getUser(userId);
+        const { data } = await getUser(userId || rId);
         setUserData(data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
     fetchUser();
-  }, [userId]);
+  }, [userId, rId]);
 
   const handleClick = () => {
     navigate("/profile");

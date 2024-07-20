@@ -24,15 +24,13 @@ const jobSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    doneBy: {
+    doneBy: { 
       type: String,
-      required: true,
     },
     createdAt: {
       type: Date,
       default: Date.now,
     },
-    image: String,
     bids: [bidSchema],
     category: {
       type: String,

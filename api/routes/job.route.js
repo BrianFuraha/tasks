@@ -11,8 +11,8 @@ import {
 const router = express.Router();
 
 router.post("/createJob", createJob);
-// router.get("/auctionJob", auctionJob);
-router.get("/myJob", myJobs);
+router.post("/auctionJob", createJob);
+router.get("/:id/myJob", myJobs);
 router.put("/:id/bidJob", bidJob);
 router.put("/:id/selectRunner", selectRunner);
 

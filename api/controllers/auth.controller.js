@@ -38,6 +38,9 @@ export const signin = async (req, res, next) => {
     });
 
     if (validUser.userType === "runner") {
+      const roundToNearestHalf = (num) => {
+        return Math.round(num * 2) / 2;
+      };
       // Calculate the average rate of comments
       const commentsWithRate = validUser.comments.filter(
         (comment) => comment.rate !== undefined

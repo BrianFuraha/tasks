@@ -6,7 +6,7 @@ export default function profileCard() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const handleClick = () => {
-    navigate('/profile');
+    navigate("/profile");
   };
   return currentUser.userType === "user" ? (
     <div className=" w-full h-full flex justify-center items-center">
@@ -43,6 +43,6 @@ export default function profileCard() {
       </div>
     </div>
   ) : (
-    <Navigate to={`/runnerProfile/${currentUser._id}`} />
+    <Navigate to={"/runnerProfile"} />
   );
 }
