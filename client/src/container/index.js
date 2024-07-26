@@ -6,3 +6,5 @@ export { default as Testimonials } from "./testimonials";
 export { default as Fbutton } from "./button1";
 export { default as Card } from "./card";
 export { default as FileUploader } from "./fileUploader";
+export { default as JobCard } from "./jCard";
+export { default as Bidder } from "./bidders";

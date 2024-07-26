@@ -119,7 +119,6 @@ export const selectRunner = async (req, res, next) => {
   }
 };
 
-
 export const myJobs = async (req, res, next) => {
   const id = req.params.id;
 
@@ -147,5 +146,20 @@ export const myJobs = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+};
+
+export const getAuctions = async (req, res, next) => {
+  try {
+    const jobs = await JobModel.Job.find({});
+    const auctions = jobs.filter((job) => job.isBid === true); // Assuming isBid is a boolean
+
+    if (!auctions || auctions.length === 0) {
+      return res.status(404).json({ message: "No Auction Jobs found" });
+    }
+
+    res.status(200).json(auctions);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };

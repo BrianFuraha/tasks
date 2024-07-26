@@ -18,3 +18,4 @@ export const createAuction = (data) => API.post(`/api/job/auctionJob`, data);
 export const fetchJob = (id) => API.get(`/api/job/${id}/myJob`);
 export const bidJob = (id) => API.put(`/api/job/${id}/bidJob`);
 export const selectRunner = (id) => API.put(`/api/job/${id}/selectRunner`);
+export const getAuctions = () => API.get("/api/job/auctions");
